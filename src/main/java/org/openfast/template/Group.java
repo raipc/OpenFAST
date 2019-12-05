@@ -61,27 +61,27 @@ public class Group extends Field {
 
     public Group(QName name, Field[] fields, boolean optional) {
         super(name, optional);
-        List expandedFields = new ArrayList();
-        List staticTemplateReferences = new ArrayList();
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i] instanceof StaticTemplateReference) {
-                Field[] referenceFields = ((StaticTemplateReference) fields[i]).getTemplate().getFields();
-                for (int j = 1; j < referenceFields.length; j++)
+        List<Field> expandedFields = new ArrayList<>();
+        List<StaticTemplateReference> staticTemplateReferences = new ArrayList<>();
+        for (Field field : fields) {
+            if (field instanceof StaticTemplateReference) {
+                Field[] referenceFields = field.getTemplate().getFields();
+                for (int j = 1; j < referenceFields.length; j++) {
                     expandedFields.add(referenceFields[j]);
-                staticTemplateReferences.add(fields[i]);
+                }
+                staticTemplateReferences.add((StaticTemplateReference) field);
             } else {
-                expandedFields.add(fields[i]);
+                expandedFields.add(field);
             }
         }
-        this.fields = (Field[]) expandedFields.toArray(new Field[expandedFields.size()]);
+        this.fields = expandedFields.toArray(new Field[0]);
         this.fieldDefinitions = fields;
         this.fieldIndexMap = constructFieldIndexMap(this.fields);
         this.fieldNameMap = constructFieldNameMap(this.fields);
         this.fieldIdMap = constructFieldIdMap(this.fields);
         this.introspectiveFieldMap = constructInstrospectiveFields(this.fields);
         this.usesPresenceMap = determinePresenceMapUsage(this.fields);
-        this.staticTemplateReferences = (StaticTemplateReference[]) staticTemplateReferences
-                .toArray(new StaticTemplateReference[staticTemplateReferences.size()]);
+        this.staticTemplateReferences = staticTemplateReferences.toArray(new StaticTemplateReference[0]);
     }
 
     // BAD ABSTRACTION
@@ -110,9 +110,11 @@ public class Group extends Field {
      *         otherwise
      */
     private static boolean determinePresenceMapUsage(Field[] fields) {
-        for (int i = 0; i < fields.length; i++)
-            if (fields[i].usesPresenceMapBit())
+        for (Field field : fields) {
+            if (field.usesPresenceMapBit()) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -214,7 +216,7 @@ public class Group extends Field {
      * @param present
      * @return Returns a new GroupValue
      */
-    public FieldValue decode(InputStream in, Group group, Context context, BitVectorReader pmapReader) {
+    public GroupValue decode(InputStream in, Group group, Context context, BitVectorReader pmapReader) {
         try {
             if (!usesPresenceMapBit() || pmapReader.read()) {
                 if (context.isTraceEnabled()) {
@@ -224,8 +226,9 @@ public class Group extends Field {
                 if (context.isTraceEnabled())
                     context.getDecodeTrace().groupEnd();
                 return groupValue;
-            } else
+            } else {
                 return null;
+            }
         } catch (FastException e) {
             throw new FastException("Error occurred while decoding " + this, e.getCode(), e);
         }
@@ -278,8 +281,7 @@ public class Group extends Field {
      *            The index of the Field to start decoding from
      * @return Returns a FieldValue array of the decoded field values passed to
      *         it.
-     * @throws Throws
-     *             RuntimeException if there is an problem in the decoding
+     * @throws RuntimeException if there is a problem in the decoding
      * 
      */
     public FieldValue[] decodeFieldValues(InputStream in, Group template, BitVectorReader pmapReader, Context context) {
@@ -354,7 +356,7 @@ public class Group extends Field {
      *            The value that the fieldValue that is to be created
      * @return Returns a new GroupValue
      */
-    public FieldValue createValue(String value) {
+    public GroupValue createValue(String value) {
         return new GroupValue(this, new FieldValue[fields.length]);
     }
 
@@ -427,11 +429,11 @@ public class Group extends Field {
      * @return Returns an integer of the field index of the specified field name
      */
     public int getFieldIndex(String fieldName) {
-        return ((Integer) fieldIndexMap.get(getField(fieldName))).intValue();
+        return ((Integer) fieldIndexMap.get(getField(fieldName)));
     }
 
     public int getFieldIndex(Field field) {
-        return ((Integer) fieldIndexMap.get(field)).intValue();
+        return ((Integer) fieldIndexMap.get(field));
     }
 
     /**
@@ -585,9 +587,9 @@ public class Group extends Field {
     }
 
     public StaticTemplateReference getStaticTemplateReference(QName name) {
-        for (int i = 0; i < staticTemplateReferences.length; i++) {
-            if (staticTemplateReferences[i].getQName().equals(name))
-                return staticTemplateReferences[i];
+        for (StaticTemplateReference staticTemplateReference : staticTemplateReferences) {
+            if (staticTemplateReference.getQName().equals(name))
+                return staticTemplateReference;
         }
         return null;
     }

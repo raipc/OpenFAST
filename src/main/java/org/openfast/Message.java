@@ -49,9 +49,7 @@ public class Message extends GroupValue {
             return false;
         for (int i = 1; i < message.getFieldCount(); i++)
             if (message.getValue(i) == null) {
-                if (this.getValue(i) == null) {
-                    continue;
-                } else {
+                if (this.getValue(i) != null) {
                     return false;
                 }
             } else if (!message.getValue(i).equals(this.getValue(i))) {

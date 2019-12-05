@@ -52,7 +52,7 @@ final class AsciiString extends TypeCodec {
             throw new IllegalStateException("Only nullable strings can represent null values.");
         }
         String string = value.toString();
-        if ((string != null) && (string.length() == 0)) {
+        if ("".equals(string)) {
             return TypeCodec.NULL_VALUE_ENCODING;
         }
         if (string.startsWith(ZERO_TERMINATOR)) {

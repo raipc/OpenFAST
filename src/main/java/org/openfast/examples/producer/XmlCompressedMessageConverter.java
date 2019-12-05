@@ -138,7 +138,7 @@ public class XmlCompressedMessageConverter {
     private void parseSequence(HierarchicalStreamReader reader, Sequence sequence, SequenceValue value) {
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            GroupValue current = (GroupValue) sequence.getGroup().createValue(null);
+            GroupValue current = sequence.getGroup().createValue(null);
             parseGroup(reader, sequence.getGroup(), current);
             value.add(current);
             reader.moveUp();

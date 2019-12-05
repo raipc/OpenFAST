@@ -149,7 +149,7 @@ public class MessageTemplate extends Group implements FieldSet {
      * @return Creates a new Message object with the specified FieldValue and
      *         the passed string value
      */
-    public FieldValue createValue(String value) {
+    public Message createValue(String value) {
         return new Message(this);
     }
 

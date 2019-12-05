@@ -22,7 +22,6 @@ package org.openfast;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.openfast.debug.BasicDecodeTrace;
@@ -47,14 +46,14 @@ import org.openfast.util.UnboundedCache;
 public class Context implements OpenFastContext {
     private TemplateRegistry templateRegistry = new BasicTemplateRegistry();
     private int lastTemplateId;
-    private final Map dictionaries = new HashMap();
+    private final Map<String, Dictionary> dictionaries = new HashMap<>();
     private ErrorHandler errorHandler = ErrorHandler.DEFAULT;
     private QName currentApplicationType;
-    private final List listeners = Collections.EMPTY_LIST;
+    private final List<TemplateRegisteredListener> listeners = Collections.emptyList();
     private boolean traceEnabled;
     private Trace encodeTrace;
     private Trace decodeTrace;
-    private final Map caches = new HashMap();
+    private final Map<QName, Cache> caches = new HashMap<>();
     private final OpenFastContext parentContext;
     private FastMessageLogger logger = null;
 
@@ -84,9 +83,8 @@ public class Context implements OpenFastContext {
     }
     public void registerTemplate(int templateId, MessageTemplate template) {
         templateRegistry.register(templateId, template);
-        Iterator iter = listeners.iterator();
-        while (iter.hasNext()) {
-            ((TemplateRegisteredListener) iter.next()).templateRegistered(template, templateId);
+        for (TemplateRegisteredListener listener : listeners) {
+            listener.templateRegistered(template, templateId);
         }
     }
     public int getLastTemplateId() {
@@ -103,7 +101,7 @@ public class Context implements OpenFastContext {
     private Dictionary getDictionary(String dictionary) {
         if (!dictionaries.containsKey(dictionary))
             dictionaries.put(dictionary, new GlobalDictionary());
-        return (Dictionary) dictionaries.get(dictionary);
+        return dictionaries.get(dictionary);
     }
     public void store(String dictionary, Group group, QName key, ScalarValue valueToEncode) {
         if (group.hasTypeReference())
@@ -111,8 +109,7 @@ public class Context implements OpenFastContext {
         getDictionary(dictionary).store(group, currentApplicationType, key, valueToEncode);
     }
     public void reset() {
-        for (Iterator iter = dictionaries.values().iterator(); iter.hasNext();) {
-            Dictionary dict = (Dictionary) iter.next();
+        for (Dictionary dict : dictionaries.values()) {
             dict.reset();
         }
     }
@@ -160,16 +157,10 @@ public class Context implements OpenFastContext {
         return decodeTrace;
     }
     public Cache getCache(QName key) {
-        if (!caches.containsKey(key)) {
-            caches.put(key, new UnboundedCache());
-        }
-        return (Cache) caches.get(key);
+        return caches.computeIfAbsent(key, k -> new UnboundedCache());
     }
     public void store(QName key, int index, ScalarValue value) {
-        if (!caches.containsKey(key)) {
-            caches.put(key, new UnboundedCache());
-        }
-        ((Cache)caches.get(key)).store(index, value);
+        getCache(key).store(index, value);
     }
     public FastMessageLogger getLogger() {
         if (logger == null) {

@@ -20,25 +20,23 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 */
 package org.openfast;
 
-import org.openfast.template.Group;
-
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
+import org.openfast.template.Group;
 
 
 public class TemplateDictionary implements Dictionary {
-    protected Map table = new HashMap();
+    protected Map<Group, Map<QName, ScalarValue>> table = new HashMap<>();
 
     public ScalarValue lookup(Group template, QName key, QName applicationType) {
-        if (!table.containsKey(template)) {
-            return ScalarValue.UNDEFINED;
+        Map<QName, ScalarValue> map = table.get(template);
+        if (map != null) {
+            ScalarValue scalarValue = map.get(key);
+            if (scalarValue != null || map.containsKey(key)) {
+                return scalarValue;
+            }
         }
-
-        if (((Map) table.get(template)).containsKey(key)) {
-            return (ScalarValue) ((Map) table.get(template)).get(key);
-        }
-
         return ScalarValue.UNDEFINED;
     }
 
@@ -48,23 +46,22 @@ public class TemplateDictionary implements Dictionary {
 
     public void store(Group group, QName applicationType, QName key, ScalarValue valueToEncode) {
         if (!table.containsKey(group)) {
-            table.put(group, new HashMap());
+            table.put(group, new HashMap<>());
         }
 
-        ((Map) table.get(group)).put(key, valueToEncode);
+        table.get(group).put(key, valueToEncode);
     }
 
     public String toString() {
+        if (table.isEmpty()) {
+            return "";
+        }
         StringBuilder builder = new StringBuilder();
-        Iterator templateIterator = table.keySet().iterator();
-        while (templateIterator.hasNext()) {
-            Object template = templateIterator.next();
-            builder.append("Dictionary: Template=" + template.toString());
-            Map templateMap = (Map)table.get(template);
-            Iterator keyIterator = templateMap.keySet().iterator();
-            while (keyIterator.hasNext()) {
-                Object key = keyIterator.next();
-                builder.append(key).append("=").append(templateMap.get(key)).append("\n");
+        for (Map.Entry<Group, Map<QName, ScalarValue>> entry : table.entrySet()) {
+            builder.append("Dictionary: Template=").append(entry.getKey());
+            Map<QName, ScalarValue> templateMap = entry.getValue();
+            for (Map.Entry<QName, ScalarValue> templateMapEntry : templateMap.entrySet()) {
+                builder.append(templateMapEntry.getKey()).append("=").append(templateMapEntry.getValue()).append("\n");
             }
         }
         return builder.toString();

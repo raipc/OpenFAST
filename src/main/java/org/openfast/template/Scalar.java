@@ -215,7 +215,7 @@ public class Scalar extends Field {
      *         decodes the previousValue and returns the FieldValue object after
      *         decoding
      */
-    public FieldValue decode(InputStream in, Group template, Context context, BitVectorReader presenceMapReader) {
+    public ScalarValue decode(InputStream in, Group template, Context context, BitVectorReader presenceMapReader) {
         try {
             ScalarValue previousValue = null;
             if (operator.usesDictionary()) {

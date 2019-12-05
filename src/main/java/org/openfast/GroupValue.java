@@ -60,8 +60,8 @@ public class GroupValue implements FieldValue {
         this(group, new FieldValue[group.getFieldCount()]);
     }
 
-    public Iterator iterator() {
-        return new ArrayIterator(values);
+    public Iterator<FieldValue> iterator() {
+        return new ArrayIterator<>(values);
     }
 
     public int getInt(int fieldIndex) {

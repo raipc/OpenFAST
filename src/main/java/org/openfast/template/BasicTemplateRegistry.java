@@ -37,17 +37,15 @@ public class BasicTemplateRegistry extends AbstractTemplateRegistry {
 
     public void register(int id, MessageTemplate template) {
         define(template);
-        Integer tid = new Integer(id);
         idMap.put(id, template);
-        templateMap.put(template, tid);
+        templateMap.put(template, id);
         notifyTemplateRegistered(template, id);
     }
     public void register(int id, QName name) {
         if (!nameMap.containsKey(name))
             throw new IllegalArgumentException("The template named " + name + " is not defined.");
-        Integer tid = new Integer(id);
         MessageTemplate template = (MessageTemplate) nameMap.get(name);
-        templateMap.put(template, tid);
+        templateMap.put(template, id);
         idMap.put(id, template);
         notifyTemplateRegistered(template, id);
     }

@@ -24,14 +24,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-import org.openfast.BitVectorReader;
-import org.openfast.QName;
+
 import org.openfast.BitVectorBuilder;
+import org.openfast.BitVectorReader;
 import org.openfast.Context;
 import org.openfast.FieldValue;
 import org.openfast.Global;
-import org.openfast.GroupValue;
 import org.openfast.IntegerValue;
+import org.openfast.QName;
 import org.openfast.ScalarValue;
 import org.openfast.SequenceValue;
 import org.openfast.error.FastConstants;
@@ -197,13 +197,13 @@ public class Sequence extends Field implements FieldSet {
      */
     public FieldValue decode(InputStream in, Group template, Context context, BitVectorReader pmapReader) {
         SequenceValue sequenceValue = new SequenceValue(this);
-        ScalarValue lengthValue = (ScalarValue) length.decode(in, template, context, pmapReader);
+        ScalarValue lengthValue = length.decode(in, template, context, pmapReader);
         if ((lengthValue == ScalarValue.NULL) || (lengthValue == null)) {
             return null;
         }
         int len = lengthValue.toInt();
         for (int i = 0; i < len; i++)
-            sequenceValue.add((GroupValue) group.decode(in, template, context, BitVectorReader.INFINITE_TRUE));
+            sequenceValue.add(group.decode(in, template, context, BitVectorReader.INFINITE_TRUE));
         return sequenceValue;
     }
 
