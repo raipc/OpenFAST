@@ -28,27 +28,19 @@ import org.openfast.template.Group;
 
 public class ApplicationTypeDictionary implements Dictionary {
 
-    private Map dictionary = new HashMap();
+    private Map<QName, Map<QName, ScalarValue>> dictionary = new HashMap<>();
 
     public ScalarValue lookup(Group template, QName key, QName applicationType) {
-        if (dictionary.containsKey(template.getTypeReference())) {
-            Map applicationTypeMap = (Map) dictionary.get(template.getTypeReference());
-            if (applicationTypeMap.containsKey(key))
-                return (ScalarValue) applicationTypeMap.get(key);
-        }
-        return ScalarValue.UNDEFINED;
+        Map<QName, ScalarValue> map = dictionary.get(template.getTypeReference());
+        return map != null ? map.getOrDefault(key, ScalarValue.UNDEFINED) : ScalarValue.UNDEFINED;
     }
 
     public void reset() {
-        dictionary = new HashMap();
+        dictionary = new HashMap<>();
     }
 
     public void store(Group group, QName applicationType, QName key, ScalarValue value) {
-        if (!dictionary.containsKey(group.getTypeReference())) {
-            dictionary.put(group.getTypeReference(), new HashMap());
-        }
-        Map applicationTypeDictionary = (Map) dictionary.get(group.getTypeReference());
-        applicationTypeDictionary.put(key, value);
+        dictionary.computeIfAbsent(group.getTypeReference(), k -> new HashMap<>()).put(key, value);
     }
 
     public String toString() {

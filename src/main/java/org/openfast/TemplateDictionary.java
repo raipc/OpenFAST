@@ -31,13 +31,7 @@ public class TemplateDictionary implements Dictionary {
 
     public ScalarValue lookup(Group template, QName key, QName applicationType) {
         Map<QName, ScalarValue> map = table.get(template);
-        if (map != null) {
-            ScalarValue scalarValue = map.get(key);
-            if (scalarValue != null || map.containsKey(key)) {
-                return scalarValue;
-            }
-        }
-        return ScalarValue.UNDEFINED;
+        return map != null ? map.getOrDefault(key, ScalarValue.UNDEFINED) : ScalarValue.UNDEFINED;
     }
 
     public void reset() {

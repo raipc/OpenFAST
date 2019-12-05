@@ -20,22 +20,18 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 */
 package org.openfast;
 
-import org.openfast.template.Group;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.openfast.template.Group;
+
 
 public class GlobalDictionary implements Dictionary {
-    protected Map table = new HashMap();
+    protected Map<QName, ScalarValue> table = new HashMap<>();
 
     public ScalarValue lookup(Group template, QName key, QName applicationType) {
-        if (!table.containsKey(key)) {
-            return ScalarValue.UNDEFINED;
-        }
-
-        return (ScalarValue) table.get(key);
+        return table.getOrDefault(key, ScalarValue.UNDEFINED);
     }
 
     public void store(Group group, QName applicationType, QName key, ScalarValue value) {

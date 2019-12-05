@@ -99,9 +99,7 @@ public class Context implements OpenFastContext {
         return getDictionary(dictionary).lookup(group, key, currentApplicationType);
     }
     private Dictionary getDictionary(String dictionary) {
-        if (!dictionaries.containsKey(dictionary))
-            dictionaries.put(dictionary, new GlobalDictionary());
-        return dictionaries.get(dictionary);
+        return dictionaries.computeIfAbsent(dictionary, k -> new GlobalDictionary());
     }
     public void store(String dictionary, Group group, QName key, ScalarValue valueToEncode) {
         if (group.hasTypeReference())
