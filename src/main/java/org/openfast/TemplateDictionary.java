@@ -39,11 +39,7 @@ public class TemplateDictionary implements Dictionary {
     }
 
     public void store(Group group, QName applicationType, QName key, ScalarValue valueToEncode) {
-        if (!table.containsKey(group)) {
-            table.put(group, new HashMap<>());
-        }
-
-        table.get(group).put(key, valueToEncode);
+        table.computeIfAbsent(group, k -> new HashMap<>()).put(key, valueToEncode);
     }
 
     public String toString() {

@@ -33,7 +33,7 @@ import org.openfast.template.type.Type;
 public class Operator implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final Map OPERATOR_NAME_MAP = new HashMap();
+    private static final Map<String, Operator> OPERATOR_NAME_MAP = new HashMap<>();
 
     private final String name;
 
@@ -107,9 +107,11 @@ public class Operator implements Serializable {
     }
 
     public static Operator getOperator(String name) {
-        if (!OPERATOR_NAME_MAP.containsKey(name))
+        Operator operator = OPERATOR_NAME_MAP.get(name);
+        if (operator == null) {
             throw new IllegalArgumentException("The operator \"" + name + "\" does not exist.");
-        return (Operator) OPERATOR_NAME_MAP.get(name);
+        }
+        return operator;
     }
 
     public OperatorCodec getCodec(Type type) {

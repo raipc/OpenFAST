@@ -20,52 +20,38 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast.util;
 
-import java.util.Arrays;
+import java.util.Objects;
 
 public class Key {
-    private final Object[] keys;
+    private final Object a;
+    private final Object b;
 
     public Key(Object key1, Object key2) {
-        this(new Object[] { key1, key2 });
-    }
-
-    public Key(Object key1, Object key2, Object key3) {
-        this(new Object[] { key1, key2, key3 });
-    }
-
-    public Key(Object[] keys) {
-        this.keys = keys;
-        checkNull();
-    }
-
-    private void checkNull() {
-        for (int i = 0; i < keys.length; i++)
-            if (keys[i] == null)
-                throw new NullPointerException();
+        if (key1 == null) {
+            throw new NullPointerException("key1 must not ne null");
+        }
+        if (key2 == null) {
+            throw new NullPointerException("key2 must not ne null");
+        }
+        this.a = key1;
+        this.b = key2;
     }
 
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if ((obj == null) || !(obj instanceof Key))
+        if (!(obj instanceof Key))
             return false;
-        Key other = ((Key) obj);
-        if (other.keys.length != keys.length)
-            return false;
-        for (int i = 0; i < keys.length; i++)
-            if (!other.keys[i].equals(keys[i]))
-                return false;
-        return true;
+        Key other = (Key) obj;
+        return Objects.equals(a, other.a) && Objects.equals(b, other.b);
     }
 
     public int hashCode() {
-        int hashCode = 0;
-        for (int i = 0; i < keys.length; i++)
-            hashCode += keys[i].hashCode() * (37 ^ i);
-        return hashCode;
+        int hashCode = a.hashCode();
+        return hashCode + b.hashCode() * 37;
     }
 
     public String toString() {
-        return Arrays.toString(keys);
+        return "Key(a=" + a + ",b=" + b + ")";
     }
 }
