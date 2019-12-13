@@ -182,4 +182,9 @@ public class LongValue extends NumericValue {
     public int toInt() {
         return (int) value;
     }
+
+    @Override
+    public void appendValue(StringBuilder sb, String nullValue) {
+        sb.append(value);
+    }
 }

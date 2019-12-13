@@ -24,4 +24,8 @@ import java.io.Serializable;
 
 public interface FieldValue extends Serializable {
     FieldValue copy();
+
+    default void appendValue(StringBuilder sb, String nullValue) {
+        sb.append(toString());
+    }
 }

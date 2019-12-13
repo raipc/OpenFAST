@@ -46,6 +46,11 @@ public class ScalarValue implements FieldValue {
         }
 
         @Override
+        public void appendValue(StringBuilder sb, String nullValue) {
+            sb.append(nullValue);
+        }
+
+        @Override
         public String toString() {
             return "NULL";
         }

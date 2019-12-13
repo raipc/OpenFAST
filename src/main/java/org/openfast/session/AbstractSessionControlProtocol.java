@@ -29,6 +29,11 @@ abstract class AbstractSessionControlProtocol implements SessionProtocol {
     static final MessageTemplate FAST_RESET_TEMPLATE = new MessageTemplate("Reset", new Field[] {});
     static final Message RESET = new Message(FAST_RESET_TEMPLATE) {
         private static final long serialVersionUID = 1L;
+
+        @Override
+        public void appendValue(StringBuilder sb, String nullValue) {
+            sb.append(nullValue);
+        }
     };
 
     public Message getResetMessage() {

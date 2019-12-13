@@ -137,4 +137,9 @@ public class IntegerValue extends NumericValue {
     public BigDecimal toBigDecimal() {
         return new BigDecimal(value);
     }
+
+    @Override
+    public void appendValue(StringBuilder sb, String nullValue) {
+        sb.append(value);
+    }
 }

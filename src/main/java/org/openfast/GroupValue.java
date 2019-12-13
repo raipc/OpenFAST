@@ -355,4 +355,9 @@ public class GroupValue implements FieldValue {
         }
         return new GroupValue(group, this.values);
     }
+
+    @Override
+    public void appendValue(StringBuilder sb, String nullValue) {
+        sb.append(toString());
+    }
 }
