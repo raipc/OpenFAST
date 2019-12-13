@@ -31,7 +31,7 @@ public class UnsignedIntegerType extends IntegerType {
     }
 
     /**
-     * Get the approprivate codec for the passed operator
+     * Get the appropriate codec for the passed operator
      * 
      * @param operator
      *            The operator object in which the codec is trying to get
