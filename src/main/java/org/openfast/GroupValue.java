@@ -176,10 +176,8 @@ public class GroupValue implements FieldValue {
     }
 
     public FieldValue getValue(String fieldName) {
-        if (!group.hasField(fieldName)) {
-            return null;
-        }
-        return values[group.getFieldIndex(fieldName)];
+        final int fieldIndex = group.getFieldIndex(fieldName);
+        return fieldIndex == -1 ? null : values[fieldIndex];
     }
 
     public Group getGroup() {
@@ -262,13 +260,13 @@ public class GroupValue implements FieldValue {
         if (value instanceof String) {
             fieldValue = new StringValue(String.valueOf(value));
         } else if (value instanceof Integer) {
-            fieldValue = new IntegerValue(((Integer) value).intValue());
+            fieldValue = new IntegerValue(((Integer) value));
         } else if (value instanceof Long) {
-            fieldValue = new LongValue(((Long) value).longValue());
+            fieldValue = new LongValue(((Long) value));
         } else if (value instanceof Boolean) {
-            fieldValue = new IntegerValue(((Boolean) value).booleanValue() ? 1 : 0);
+            fieldValue = new IntegerValue(((Boolean) value) ? 1 : 0);
         } else if (value instanceof Double) {
-            fieldValue = new DecimalValue(((Double) value).doubleValue());
+            fieldValue = new DecimalValue(((Double) value));
         }
         setFieldValue(fieldIndex, fieldValue);
     }

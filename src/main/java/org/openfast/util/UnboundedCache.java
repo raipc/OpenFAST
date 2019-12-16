@@ -1,16 +1,18 @@
 package org.openfast.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.koloboke.collect.map.IntObjMap;
+import com.koloboke.collect.map.ObjIntMap;
+import com.koloboke.collect.map.hash.HashIntObjMaps;
+import com.koloboke.collect.map.hash.HashObjIntMaps;
 import org.openfast.FieldValue;
 
 public class UnboundedCache implements Cache {
     private int nextIndex = 1;
-    private final IntegerMap indexToValueMap = new SimpleIntegerMap();
-    private final Map<FieldValue, Integer> valueToIndexMap = new HashMap<>();
+    private final IntObjMap<FieldValue> indexToValueMap = HashIntObjMaps.newMutableMap();
+    private final ObjIntMap<FieldValue> valueToIndexMap = HashObjIntMaps.newMutableMap();
 
     public int getIndex(FieldValue value) {
-        return valueToIndexMap.get(value);
+        return valueToIndexMap.getInt(value);
     }
 
     public int store(FieldValue value) {
@@ -31,6 +33,6 @@ public class UnboundedCache implements Cache {
     }
 
     public FieldValue lookup(int index) {
-        return (FieldValue) indexToValueMap.get(index);
+        return indexToValueMap.get(index);
     }
 }

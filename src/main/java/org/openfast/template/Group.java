@@ -24,10 +24,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.koloboke.collect.map.hash.HashObjIntMap;
+import com.koloboke.collect.map.hash.HashObjIntMaps;
 import org.openfast.BitVector;
 import org.openfast.BitVectorBuilder;
 import org.openfast.BitVectorReader;
@@ -47,13 +51,13 @@ public class Group extends Field {
     private QName typeReference = null;
     protected String childNamespace = "";
     protected final Field[] fields;
-    protected final Map fieldIndexMap;
-    protected final Map fieldIdMap;
-    protected final Map fieldNameMap;
+    protected final HashObjIntMap<String> fieldIndexMap;
+    protected final Map<String, Field> fieldIdMap;
+    protected final Map<QName, Field> fieldNameMap;
     protected final boolean usesPresenceMap;
     protected final StaticTemplateReference[] staticTemplateReferences;
     protected final Field[] fieldDefinitions;
-    protected final Map introspectiveFieldMap;
+    protected final Map<String, Scalar> introspectiveFieldMap;
 
     public Group(String name, Field[] fields, boolean optional) {
         this(new QName(name), fields, optional);
@@ -66,9 +70,7 @@ public class Group extends Field {
         for (Field field : fields) {
             if (field instanceof StaticTemplateReference) {
                 Field[] referenceFields = field.getTemplate().getFields();
-                for (int j = 1; j < referenceFields.length; j++) {
-                    expandedFields.add(referenceFields[j]);
-                }
+                expandedFields.addAll(Arrays.asList(referenceFields).subList(1, referenceFields.length));
                 staticTemplateReferences.add((StaticTemplateReference) field);
             } else {
                 expandedFields.add(field);
@@ -85,18 +87,19 @@ public class Group extends Field {
     }
 
     // BAD ABSTRACTION
-    private static Map constructInstrospectiveFields(Field[] fields) {
-        Map map = new HashMap();
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i] instanceof Scalar) {
-                if (fields[i].hasChild(FastConstants.LENGTH_FIELD)) {
-                    Node lengthNode = (Node) fields[i].getChildren(FastConstants.LENGTH_FIELD).get(0);
-                    map.put(lengthNode.getAttribute(FastConstants.LENGTH_NAME_ATTR), fields[i]);
+    private static Map<String, Scalar> constructInstrospectiveFields(Field[] fields) {
+        Map<String, Scalar> map = new HashMap<>();
+        for (Field field : fields) {
+            if (field instanceof Scalar) {
+                if (field.hasChild(FastConstants.LENGTH_FIELD)) {
+                    Node lengthNode = (Node) field.getChildren(FastConstants.LENGTH_FIELD).get(0);
+                    map.put(lengthNode.getAttribute(FastConstants.LENGTH_NAME_ATTR), (Scalar) field);
                 }
             }
         }
-        if (map.size() == 0)
-            return Collections.EMPTY_MAP;
+        if (map.size() == 0) {
+            return Collections.emptyMap();
+        }
         return map;
     }
 
@@ -375,11 +378,11 @@ public class Group extends Field {
      * @return Returns the field object of the passed field name
      */
     public Field getField(String fieldName) {
-        return (Field) fieldNameMap.get(new QName(fieldName, childNamespace));
+        return fieldNameMap.get(new QName(fieldName, childNamespace));
     }
 
     public Field getField(QName name) {
-        return (Field) fieldNameMap.get(name);
+        return fieldNameMap.get(name);
     }
 
     /**
@@ -391,15 +394,15 @@ public class Group extends Field {
      *            new map object
      * @return Returns a map object of the field array passed to it
      */
-    private static Map constructFieldNameMap(Field[] fields) {
-        Map map = new HashMap();
+    private static Map<QName, Field> constructFieldNameMap(Field[] fields) {
+        Map<QName, Field> map = new HashMap<>();
         for (int i = 0; i < fields.length; i++)
             map.put(fields[i].getQName(), fields[i]);
         return map;
     }
 
-    private static Map constructFieldIdMap(Field[] fields) {
-        Map map = new HashMap();
+    private static Map<String, Field> constructFieldIdMap(Field[] fields) {
+        Map<String, Field> map = new HashMap<>();
         for (int i = 0; i < fields.length; i++)
             map.put(fields[i].getId(), fields[i]);
         return map;
@@ -414,10 +417,10 @@ public class Group extends Field {
      *            new map object
      * @return Returns a map object of the field array passed to it
      */
-    private static Map constructFieldIndexMap(Field[] fields) {
-        Map map = new HashMap();
+    private static HashObjIntMap<String> constructFieldIndexMap(Field[] fields) {
+        final HashObjIntMap<String> map = HashObjIntMaps.newMutableMap();
         for (int i = 0; i < fields.length; i++)
-            map.put(fields[i], new Integer(i));
+            map.put(fields[i].getName(), i);
         return map;
     }
 
@@ -429,11 +432,11 @@ public class Group extends Field {
      * @return Returns an integer of the field index of the specified field name
      */
     public int getFieldIndex(String fieldName) {
-        return ((Integer) fieldIndexMap.get(getField(fieldName)));
+        return fieldIndexMap.getOrDefault(fieldName, -1);
     }
 
     public int getFieldIndex(Field field) {
-        return ((Integer) fieldIndexMap.get(field));
+        return fieldIndexMap.getOrDefault(field.getName(), -1);
     }
 
     /**
@@ -603,6 +606,6 @@ public class Group extends Field {
     }
 
     public Scalar getIntrospectiveField(String fieldName) {
-        return (Scalar) introspectiveFieldMap.get(fieldName);
+        return introspectiveFieldMap.get(fieldName);
     }
 }
