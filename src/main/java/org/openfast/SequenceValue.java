@@ -20,15 +20,14 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast;
 
-import org.openfast.template.Sequence;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
+
+import org.openfast.template.Sequence;
 
 public class SequenceValue implements FieldValue {
     private static final long serialVersionUID = 1L;
-    private List elements = Collections.EMPTY_LIST;
+    private ArrayList<GroupValue> elements = new ArrayList<>();
     private Sequence sequence;
 
     public SequenceValue(Sequence sequence) {
@@ -42,21 +41,15 @@ public class SequenceValue implements FieldValue {
         return elements.size();
     }
 
-    public Iterator iterator() {
+    public Iterator<GroupValue> iterator() {
         return elements.iterator();
     }
 
     public void add(GroupValue value) {
-        if (elements == Collections.EMPTY_LIST) {
-            elements = new ArrayList();
-        }
         elements.add(value);
     }
 
     public void add(FieldValue[] values) {
-        if (elements == Collections.EMPTY_LIST) {
-            elements = new ArrayList();
-        }
         elements.add(new GroupValue(sequence.getGroup(), values));
     }
 
@@ -99,7 +92,7 @@ public class SequenceValue implements FieldValue {
     }
 
     public GroupValue get(int index) {
-        return (GroupValue) elements.get(index);
+        return elements.get(index);
     }
 
     public Sequence getSequence() {
@@ -107,13 +100,14 @@ public class SequenceValue implements FieldValue {
     }
 
     public GroupValue[] getValues() {
-        return (GroupValue[]) this.elements.toArray(new GroupValue[elements.size()]);
+        return this.elements.toArray(new GroupValue[elements.size()]);
     }
 
     public FieldValue copy() {
         SequenceValue value = new SequenceValue(this.sequence);
+        value.elements.ensureCapacity(elements.size());
         for (int i = 0; i < elements.size(); i++) {
-            value.add((GroupValue) ((GroupValue) elements.get(i)).copy());
+            value.add((GroupValue) elements.get(i).copy());
         }
         return value;
     }
