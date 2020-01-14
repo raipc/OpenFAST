@@ -112,9 +112,9 @@ public class DecimalValueTest extends OpenFastTestCase {
         int[] exponents = {-5, -4, -3, 0, 1, 5};
         for (int exponent : exponents) {
             final DecimalValue val = d(1234, exponent);
-            final StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder("Decimal value: ");
             val.appendValue(sb, "null");
-            assertEquals(sb.toString(), new BigDecimal(BigInteger.valueOf(1234), -exponent).toPlainString());
+            assertEquals(sb.toString(), "Decimal value: " + new BigDecimal(BigInteger.valueOf(1234), -exponent).toPlainString());
         }
     }
 

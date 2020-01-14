@@ -206,9 +206,10 @@ public class DecimalValue extends NumericValue {
             }
             sb.append(mantissa);
         } else {
+            final int offset = sb.length();
             sb.ensureCapacity(digits + 1);
             sb.append(mantissa);
-            sb.insert(fpLocation, '.');
+            sb.insert(offset + fpLocation, '.');
         }
     }
 
