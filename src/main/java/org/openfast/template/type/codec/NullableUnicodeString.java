@@ -24,12 +24,13 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 package org.openfast.template.type.codec;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
 import org.openfast.ByteVectorValue;
+import org.openfast.Global;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
-import org.openfast.error.FastConstants;
-import org.openfast.error.FastException;
+import org.openfast.util.PatchableByteArrayOutputStream;
 
 final class NullableUnicodeString extends NotStopBitEncodedTypeCodec {
     private static final long serialVersionUID = 1L;
@@ -46,12 +47,8 @@ final class NullableUnicodeString extends NotStopBitEncodedTypeCodec {
     public byte[] encodeValue(ScalarValue value) {
         if (value.isNull())
             return TypeCodec.NULLABLE_BYTE_VECTOR_TYPE.encodeValue(ScalarValue.NULL);
-        try {
-            byte[] utf8encoding = ((StringValue) value).value.getBytes("UTF8");
-            return TypeCodec.NULLABLE_BYTE_VECTOR_TYPE.encode(new ByteVectorValue(utf8encoding));
-        } catch (UnsupportedEncodingException e) {
-            throw new FastException("Apparently Unicode is no longer supported by Java.", FastConstants.IMPOSSIBLE_EXCEPTION, e);
-        }
+        byte[] utf8encoding = ((StringValue) value).value.getBytes(StandardCharsets.UTF_8);
+        return TypeCodec.NULLABLE_BYTE_VECTOR_TYPE.encode(new ByteVectorValue(utf8encoding));
     }
 
     /**
@@ -63,15 +60,18 @@ final class NullableUnicodeString extends NotStopBitEncodedTypeCodec {
      *         parameters
      */
     public ScalarValue decode(InputStream in) {
-        ScalarValue decodedValue = TypeCodec.NULLABLE_BYTE_VECTOR_TYPE.decode(in);
-        if (decodedValue == null)
+        final int length = (int)UnsignedInteger.decodeUInt(in) - 1;
+        if (length < 0) {
             return null;
-        ByteVectorValue value = (ByteVectorValue) decodedValue;
-        try {
-            return new StringValue(new String(value.value, "UTF8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new FastException("Apparently Unicode is no longer supported by Java.", FastConstants.IMPOSSIBLE_EXCEPTION, e);
         }
+        final PatchableByteArrayOutputStream buffer = Global.getBuffer();
+        buffer.ensureCapacity(length);
+        final byte[] bytes = buffer.getRawArray();
+        if (!ByteVectorType.decodeByteBuffer(bytes, length, in)) {
+            return null;
+        }
+        return new StringValue(new String(bytes, 0, length, StandardCharsets.UTF_8));
+
     }
 
     /**

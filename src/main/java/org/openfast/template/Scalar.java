@@ -134,18 +134,18 @@ public class Scalar extends Field {
      * @param presenceMapBuilder
      *            The BitVector builder
      * @return byte encoding of field
-     * @throws Throws
-     *             RuntimeException if the encoding fails - will print to
+     * @throws RuntimeException if the encoding fails - will print to
      *             console the name of the scalar to fail
      */
     public byte[] encode(FieldValue fieldValue, Group template, Context context, BitVectorBuilder presenceMapBuilder) {
-        ScalarValue priorValue = (ScalarValue) context.lookup(getDictionary(), template, getKey());
+        final String dictionary = getDictionary();
+        ScalarValue priorValue = context.lookup(dictionary, template, getKey());
         ScalarValue value = (ScalarValue) fieldValue;
         if (!operatorCodec.canEncode(value, this))
             Global.handleError(FastConstants.D3_CANT_ENCODE_VALUE, "The scalar " + this + " cannot encode the value " + value);
-        ScalarValue valueToEncode = operatorCodec.getValueToEncode((ScalarValue) value, priorValue, this, presenceMapBuilder);
+        ScalarValue valueToEncode = operatorCodec.getValueToEncode(value, priorValue, this, presenceMapBuilder);
         if (operator.shouldStoreValue(value)) {
-            context.store(getDictionary(), template, getKey(), (ScalarValue) value);
+            context.store(dictionary, template, getKey(), value);
         }
         if (valueToEncode == null) {
             return new byte[0];
@@ -238,7 +238,7 @@ public class Scalar extends Field {
                 value = decode(previousValue);
             }
             validateDecodedValueIsCorrectForType(value, type);
-            if (!((getOperator() == Operator.DELTA) && (value == null))) {
+            if (!(value == null && getOperator() == Operator.DELTA)) {
                 context.store(getDictionary(), template, getKey(), value);
             }
             return value;

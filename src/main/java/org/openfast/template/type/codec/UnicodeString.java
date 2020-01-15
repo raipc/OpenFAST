@@ -24,12 +24,13 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 package org.openfast.template.type.codec;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
 import org.openfast.ByteVectorValue;
+import org.openfast.Global;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
-import org.openfast.error.FastConstants;
-import org.openfast.error.FastException;
+import org.openfast.util.PatchableByteArrayOutputStream;
 
 final class UnicodeString extends NotStopBitEncodedTypeCodec {
     private static final long serialVersionUID = 1L;
@@ -44,12 +45,8 @@ final class UnicodeString extends NotStopBitEncodedTypeCodec {
      * @return Returns a byte array of the passed object
      */
     public byte[] encodeValue(ScalarValue value) {
-        try {
-            byte[] utf8encoding = ((StringValue) value).value.getBytes("UTF8");
-            return TypeCodec.BYTE_VECTOR.encode(new ByteVectorValue(utf8encoding));
-        } catch (UnsupportedEncodingException e) {
-            throw new FastException("Apparently Unicode is no longer supported by Java.", FastConstants.IMPOSSIBLE_EXCEPTION, e);
-        }
+        byte[] utf8encoding = ((StringValue) value).value.getBytes(StandardCharsets.UTF_8);
+        return TypeCodec.BYTE_VECTOR.encode(new ByteVectorValue(utf8encoding));
     }
 
     /**
@@ -60,12 +57,17 @@ final class UnicodeString extends NotStopBitEncodedTypeCodec {
      * @return Returns a new StringValue object with the data stream as a String
      */
     public ScalarValue decode(InputStream in) {
-        ByteVectorValue value = (ByteVectorValue) TypeCodec.BYTE_VECTOR.decode(in);
-        try {
-            return new StringValue(new String(value.value, "UTF8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new FastException("Apparently Unicode is no longer supported by Java.", FastConstants.IMPOSSIBLE_EXCEPTION, e);
+        int length = (int) UnsignedInteger.decodeUInt(in);
+        if (length <= 0) {
+            return null;
         }
+        final PatchableByteArrayOutputStream buffer = Global.getBuffer();
+        buffer.ensureCapacity(length);
+        byte[] bytes = buffer.getRawArray();
+        if (!ByteVectorType.decodeByteBuffer(bytes, length, in)) {
+            return null;
+        }
+        return new StringValue(new String(bytes, 0, length, StandardCharsets.UTF_8));
     }
 
     /**

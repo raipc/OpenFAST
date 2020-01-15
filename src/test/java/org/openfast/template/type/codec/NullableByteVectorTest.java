@@ -1,6 +1,5 @@
 package org.openfast.template.type.codec;
 
-import org.openfast.template.type.codec.TypeCodec;
 import org.openfast.test.OpenFastTestCase;
 
 public class NullableByteVectorTest extends OpenFastTestCase {

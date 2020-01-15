@@ -59,6 +59,11 @@ public final class UnsignedInteger extends IntegerCodec {
      * @return the decoded value from the fast input stream
      */
     public ScalarValue decode(InputStream in) {
+        long value = decodeUInt(in);
+        return value < 0 ? null : createValue(value);
+    }
+
+    public static long decodeUInt(InputStream in) {
         long value = 0;
         int byt;
         try {
@@ -66,15 +71,15 @@ public final class UnsignedInteger extends IntegerCodec {
                 byt = in.read();
                 if (byt < 0) {
                     Global.handleError(FastConstants.END_OF_STREAM, "The end of the input stream has been reached.");
-                    return null; // short circuit if global error handler does not throw exception
+                    return -1; // short circuit if global error handler does not throw exception
                 }
                 value = (value << 7) | (byt & 0x7f);
             } while ((byt & 0x80) == 0);
         } catch (IOException e) {
             Global.handleError(FastConstants.IO_ERROR, "A IO error has been encountered while decoding.", e);
-            return null; // short circuit if global error handler does not throw exception
+            return -1; // short circuit if global error handler does not throw exception
         }
-        return createValue(value);
+        return value;
     }
 
     public boolean equals(Object obj) {

@@ -20,15 +20,14 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast;
 
-import java.io.ByteArrayOutputStream;
-
 import org.openfast.error.ErrorCode;
 import org.openfast.error.ErrorHandler;
+import org.openfast.util.PatchableByteArrayOutputStream;
 
 public final class Global {
     private static ErrorHandler errorHandler = ErrorHandler.DEFAULT;
     private static int currentImplicitId = (int) (System.currentTimeMillis() % 10000);
-    private static final ThreadLocal<ByteArrayOutputStream> buffers = new ThreadLocal<ByteArrayOutputStream>();
+    private static final ThreadLocal<PatchableByteArrayOutputStream> buffers = new ThreadLocal<>();
 
     public static void setErrorHandler(ErrorHandler handler) {
         if (handler == null) {
@@ -51,10 +50,10 @@ public final class Global {
 
     private Global() {}
 
-    public static ByteArrayOutputStream getBuffer() {
-        ByteArrayOutputStream buffer = buffers.get();
+    public static PatchableByteArrayOutputStream getBuffer() {
+        PatchableByteArrayOutputStream buffer = buffers.get();
         if(buffer == null) {
-            buffer = new ByteArrayOutputStream();
+            buffer = new PatchableByteArrayOutputStream();
             buffers.set(buffer);
             // No reset after creation necessary
             return buffer;

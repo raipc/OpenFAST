@@ -31,7 +31,6 @@ import org.openfast.Global;
 import org.openfast.IntegerValue;
 import org.openfast.ScalarValue;
 import org.openfast.error.FastConstants;
-import org.openfast.error.FastException;
 
 final class ByteVectorType extends TypeCodec {
     private static final long serialVersionUID = 1L;
@@ -62,22 +61,35 @@ final class ByteVectorType extends TypeCodec {
      *         array
      */
     public ScalarValue decode(InputStream in) {
-        int length = ((IntegerValue) TypeCodec.UINT.decode(in)).value;
+        int length = (int)UnsignedInteger.decodeUInt(in);
         byte[] encoding = new byte[length];
-        for (int i = 0; i < length; i++)
+        return decodeByteBuffer(encoding, length, in) ? new ByteVectorValue(encoding) : null;
+    }
+
+    /**
+     * Decodes byte buffer from input stream and put the result into pre-allocated byte array
+     * @param buffer byte array that will store the result
+     * @param length expected size. Must be less than or equal to buffer.length
+     * @param in InputStream which contains data to decode
+     * @return false in case of error, true if successful
+     */
+    public static boolean decodeByteBuffer(byte[] buffer, int length, InputStream in) {
+        for (int i = 0; i < length; i++) {
             try {
                 int nextByte = in.read();
                 if (nextByte < 0) {
                     Global.handleError(FastConstants.END_OF_STREAM, "The end of the input stream has been reached.");
-                    return null; // short circuit if global error handler does not throw exception
+                    return false; // short circuit if global error handler does not throw exception
                 }
-                encoding[i] = (byte) nextByte;
+                buffer[i] = (byte) nextByte;
             } catch (IOException e) {
-                Global.handleError(FastConstants.IO_ERROR, "A IO error has been encountered while decoding.", e);
-                return null; // short circuit if global error handler does not throw exception
+                Global.handleError(FastConstants.IO_ERROR, "An IO error has been encountered while decoding.", e);
+                return false; // short circuit if global error handler does not throw exception
             }
-        return new ByteVectorValue(encoding);
+        }
+        return true;
     }
+
     public byte[] encodeValue(ScalarValue value) {
         throw new UnsupportedOperationException();
     }

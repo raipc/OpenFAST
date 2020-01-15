@@ -20,13 +20,11 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast.template.type.codec;
 
-import java.io.IOException;
 import java.io.InputStream;
+
 import org.openfast.ByteVectorValue;
-import org.openfast.Global;
 import org.openfast.IntegerValue;
 import org.openfast.ScalarValue;
-import org.openfast.error.FastConstants;
 
 public class NullableByteVector extends NotStopBitEncodedTypeCodec {
     private static final long serialVersionUID = 1L;
@@ -40,24 +38,12 @@ public class NullableByteVector extends NotStopBitEncodedTypeCodec {
      *         array
      */
     public ScalarValue decode(InputStream in) {
-        ScalarValue decode = TypeCodec.NULLABLE_UNSIGNED_INTEGER.decode(in);
-        if (decode == null)
+        int length = (int)UnsignedInteger.decodeUInt(in) - 1; // nullable -> decrement
+        if (length < 0) {
             return null;
-        int length = ((ScalarValue) decode).toInt();
+        }
         byte[] encoding = new byte[length];
-        for (int i = 0; i < length; i++)
-            try {
-                int nextByte = in.read();
-                if (nextByte < 0) {
-                    Global.handleError(FastConstants.END_OF_STREAM, "The end of the input stream has been reached.");
-                    return null; // short circuit if global error handler does not throw exception
-                }
-                encoding[i] = (byte) nextByte;
-            } catch (IOException e) {
-                Global.handleError(FastConstants.IO_ERROR, "An error occurred while decoding a nullable byte vector.", e);
-                return null; // short circuit if global error handler does not throw exception
-            }
-        return new ByteVectorValue(encoding);
+        return ByteVectorType.decodeByteBuffer(encoding, length, in) ? new ByteVectorValue(encoding) : null;
     }
 
     /**

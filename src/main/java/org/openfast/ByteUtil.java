@@ -112,7 +112,11 @@ public class ByteUtil {
     }
 
     public static boolean isEmpty(byte[] bytes) {
-        for (int i = 0; i < bytes.length; i++)
+        return isEmpty(bytes, bytes.length);
+    }
+
+    public static boolean isEmpty(byte[] bytes, int limit) {
+        for (int i = 0; i < limit; i++)
             if ((bytes[i] & 0x7f) != 0)
                 return false;
         return true;

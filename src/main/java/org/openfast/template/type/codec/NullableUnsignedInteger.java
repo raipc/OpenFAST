@@ -24,8 +24,12 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 package org.openfast.template.type.codec;
 
 import java.io.InputStream;
+
+import org.openfast.IntegerValue;
 import org.openfast.NumericValue;
 import org.openfast.ScalarValue;
+import org.openfast.template.LongValue;
+import org.openfast.util.Util;
 
 public final class NullableUnsignedInteger extends IntegerCodec {
     private static final long serialVersionUID = 1L;
@@ -54,11 +58,12 @@ public final class NullableUnsignedInteger extends IntegerCodec {
      * @return Returns a NumericValue object
      */
     public ScalarValue decode(InputStream in) {
-        NumericValue value = (NumericValue) TypeCodec.UINT.decode(in);
-        if (value.equals(0)) {
+        long value = UnsignedInteger.decodeUInt(in);
+        if (value == 0) {
             return null;
         }
-        return value.decrement();
+        --value;
+        return Util.isBiggerThanInt(value) ? new LongValue(value) : new IntegerValue((int)value);
     }
 
     /**

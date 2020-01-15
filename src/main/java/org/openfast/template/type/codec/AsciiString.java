@@ -23,15 +23,16 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast.template.type.codec;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.openfast.ByteUtil;
 import org.openfast.Global;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
 import org.openfast.error.FastConstants;
+import org.openfast.util.PatchableByteArrayOutputStream;
 
 final class AsciiString extends TypeCodec {
     private static final long serialVersionUID = 1L;
@@ -70,7 +71,7 @@ final class AsciiString extends TypeCodec {
      */
     public ScalarValue decode(InputStream in) {
         int byt;
-        ByteArrayOutputStream buffer = Global.getBuffer();
+        PatchableByteArrayOutputStream buffer = Global.getBuffer();
         try {
             do {
                 byt = in.read();
@@ -81,19 +82,20 @@ final class AsciiString extends TypeCodec {
                 buffer.write(byt);
             } while ((byt & 0x80) == 0);
         } catch (IOException e) {
-            Global.handleError(FastConstants.IO_ERROR, "A IO error has been encountered while decoding.", e);
+            Global.handleError(FastConstants.IO_ERROR, "An IO error has been encountered while decoding.", e);
             return null; // short circuit if global error handler does not throw exception
         }
-        byte[] bytes = buffer.toByteArray();
-        bytes[bytes.length - 1] &= 0x7f;
+        int len = buffer.size();
+        byte[] bytes = buffer.getRawArray();
+        bytes[len - 1] &= 0x7f;
         if (bytes[0] == 0) {
-            if (!ByteUtil.isEmpty(bytes))
+            if (!ByteUtil.isEmpty(bytes, len))
                 Global.handleError(FastConstants.R9_STRING_OVERLONG, null);
-            if (bytes.length > 1 && bytes[1] == 0)
+            if (len > 1 && bytes[1] == 0)
                 return new StringValue("\u0000");
             return new StringValue("");
         }
-        return new StringValue(new String(bytes));
+        return new StringValue(new String(bytes, 0, len, StandardCharsets.US_ASCII));
     }
 
     /**
