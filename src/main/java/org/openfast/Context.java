@@ -46,7 +46,7 @@ import org.openfast.util.UnboundedCache;
 public class Context implements OpenFastContext {
     private TemplateRegistry templateRegistry = new BasicTemplateRegistry();
     private int lastTemplateId;
-    private final Map<String, Dictionary> dictionaries = new HashMap<>();
+    private final Dictionaries dictionaries;
     private ErrorHandler errorHandler = ErrorHandler.DEFAULT;
     private QName currentApplicationType;
     private final List<TemplateRegisteredListener> listeners = Collections.emptyList();
@@ -60,12 +60,16 @@ public class Context implements OpenFastContext {
     public Context() {
         this(new NullOpenFastContext());
     }
+
     public Context(OpenFastContext context) {
-        this.parentContext = context;
-        dictionaries.put("global", new GlobalDictionary());
-        dictionaries.put("template", new TemplateDictionary());
-        dictionaries.put("type", new ApplicationTypeDictionary());
+        this(context, new Dictionaries());
     }
+
+    public Context(OpenFastContext context, Dictionaries dictionaries) {
+        this.parentContext = context;
+        this.dictionaries = dictionaries;
+    }
+
     public int getTemplateId(MessageTemplate template) {
         if (!templateRegistry.isRegistered(template)) {
             errorHandler.error(FastConstants.D9_TEMPLATE_NOT_REGISTERED, "The template " + template + " has not been registered.");
@@ -99,7 +103,7 @@ public class Context implements OpenFastContext {
         return getDictionary(dictionary).lookup(group, key, currentApplicationType);
     }
     private Dictionary getDictionary(String dictionary) {
-        return dictionaries.computeIfAbsent(dictionary, k -> new GlobalDictionary());
+        return dictionaries.getDictionary(dictionary);
     }
     public void store(String dictionary, Group group, QName key, ScalarValue valueToEncode) {
         if (group.hasTypeReference())
@@ -107,9 +111,7 @@ public class Context implements OpenFastContext {
         getDictionary(dictionary).store(group, currentApplicationType, key, valueToEncode);
     }
     public void reset() {
-        for (Dictionary dict : dictionaries.values()) {
-            dict.reset();
-        }
+        dictionaries.reset();
     }
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;

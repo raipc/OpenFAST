@@ -24,8 +24,9 @@ import org.openfast.template.Group;
 
 
 public interface Dictionary {
-    public static final String TEMPLATE = "template";
-	public static final String GLOBAL = "global";
+    String TEMPLATE = "template";
+	String GLOBAL = "global";
+	String TYPE = "type";
 
     ScalarValue lookup(Group template, QName key, QName currentApplicationType);
 
