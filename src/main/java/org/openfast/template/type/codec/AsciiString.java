@@ -34,7 +34,7 @@ import org.openfast.StringValue;
 import org.openfast.error.FastConstants;
 import org.openfast.util.PatchableByteArrayOutputStream;
 
-final class AsciiString extends TypeCodec {
+public final class AsciiString extends TypeCodec {
     private static final long serialVersionUID = 1L;
     private static final String ZERO_TERMINATOR = "\u0000";
     private static final byte[] ZERO_PREAMBLE = new byte[] { 0, 0 };
