@@ -36,7 +36,9 @@ public class ApplicationTypeDictionary implements Dictionary {
     }
 
     public void reset() {
-        dictionary = new HashMap<>();
+        if (!dictionary.isEmpty()) {
+            dictionary = new HashMap<>();
+        }
     }
 
     public void store(Group group, QName applicationType, QName key, ScalarValue value) {
