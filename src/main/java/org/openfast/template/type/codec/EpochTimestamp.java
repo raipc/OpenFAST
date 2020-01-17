@@ -30,11 +30,11 @@ public class EpochTimestamp extends TypeCodec {
     private static final long serialVersionUID = 1L;
 
     public ScalarValue decode(InputStream in) {
-        return new DateValue(new Date(TypeCodec.INTEGER.decode(in).toLong()));
+        return new DateValue(new Date(ValuesCodecs.INTEGER.decode(in).toLong()));
     }
 
     public byte[] encodeValue(ScalarValue value) {
-        return TypeCodec.INTEGER.encodeValue(new LongValue(value.toLong()));
+        return ValuesCodecs.INTEGER.encodeValue(new LongValue(value.toLong()));
     }
 
     public boolean equals(Object obj) {

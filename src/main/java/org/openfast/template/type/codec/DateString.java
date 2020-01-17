@@ -42,7 +42,7 @@ public class DateString extends TypeCodec {
 
     public ScalarValue decode(InputStream in) {
         try {
-            return new DateValue(formatter.parse(TypeCodec.ASCII.decode(in).toString()));
+            return new DateValue(formatter.parse(ValuesCodecs.ASCII.decode(in).toString()));
         } catch (ParseException e) {
             Global.handleError(FastConstants.PARSE_ERROR, "", e);
             return null;
@@ -50,7 +50,7 @@ public class DateString extends TypeCodec {
     }
 
     public byte[] encodeValue(ScalarValue value) {
-        return TypeCodec.ASCII.encode(new StringValue(formatter.format(((DateValue) value).value)));
+        return ValuesCodecs.ASCII.encode(new StringValue(formatter.format(((DateValue) value).value)));
     }
 
     public boolean equals(Object obj) {

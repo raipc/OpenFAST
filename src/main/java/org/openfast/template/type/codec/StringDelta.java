@@ -38,8 +38,8 @@ public class StringDelta extends TypeCodec {
      * @return Returns a TwinValue object with the data stream
      */
     public ScalarValue decode(InputStream in) {
-        ScalarValue subtractionLength = TypeCodec.INTEGER.decode(in);
-        ScalarValue difference = TypeCodec.ASCII.decode(in);
+        ScalarValue subtractionLength = ValuesCodecs.INTEGER.decode(in);
+        ScalarValue difference = ValuesCodecs.ASCII.decode(in);
         return new TwinValue(subtractionLength, difference);
     }
 
@@ -55,8 +55,8 @@ public class StringDelta extends TypeCodec {
             throw new IllegalStateException("Cannot have null values for non-nullable string delta");
         }
         TwinValue diff = (TwinValue) value;
-        byte[] subtractionLength = TypeCodec.INTEGER.encode(diff.first);
-        byte[] difference = TypeCodec.ASCII.encode(diff.second);
+        byte[] subtractionLength = ValuesCodecs.INTEGER.encode(diff.first);
+        byte[] difference = ValuesCodecs.ASCII.encode(diff.second);
         byte[] encoded = new byte[subtractionLength.length + difference.length];
         System.arraycopy(subtractionLength, 0, encoded, 0, subtractionLength.length);
         System.arraycopy(difference, 0, encoded, subtractionLength.length, difference.length);

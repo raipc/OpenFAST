@@ -33,7 +33,7 @@ public class MillisecondsSinceMidnight extends TypeCodec {
     private static final long serialVersionUID = 1L;
 
     public ScalarValue decode(InputStream in) {
-        int millisecondsSinceMidnight = TypeCodec.INTEGER.decode(in).toInt();
+        int millisecondsSinceMidnight = ValuesCodecs.INTEGER.decode(in).toInt();
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("GMT"));
         int hour = millisecondsSinceMidnight / 3600000;
@@ -53,7 +53,7 @@ public class MillisecondsSinceMidnight extends TypeCodec {
     public byte[] encodeValue(ScalarValue value) {
         Date date = ((DateValue) value).value;
         int millisecondsSinceMidnight = Util.millisecondsSinceMidnight(date);
-        return TypeCodec.INTEGER.encodeValue(new IntegerValue(millisecondsSinceMidnight));
+        return ValuesCodecs.INTEGER.encodeValue(new IntegerValue(millisecondsSinceMidnight));
     }
 
     public boolean equals(Object obj) {

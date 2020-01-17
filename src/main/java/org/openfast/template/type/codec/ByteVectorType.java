@@ -47,7 +47,7 @@ final class ByteVectorType extends TypeCodec {
         byte[] bytes = value.getBytes();
         int lengthSize = IntegerCodec.getUnsignedIntegerSize(bytes.length);
         byte[] encoding = new byte[bytes.length + lengthSize];
-        byte[] length = TypeCodec.UINT.encode(new IntegerValue(bytes.length));
+        byte[] length = ValuesCodecs.UINT.encode(new IntegerValue(bytes.length));
         System.arraycopy(length, 0, encoding, 0, lengthSize);
         System.arraycopy(bytes, 0, encoding, lengthSize, bytes.length);
         return encoding;

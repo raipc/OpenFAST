@@ -23,13 +23,13 @@ package org.openfast.template.type;
 import org.openfast.ByteUtil;
 import org.openfast.ByteVectorValue;
 import org.openfast.ScalarValue;
-import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 
 final class ByteVectorType extends SimpleType {
     private static final long serialVersionUID = 1L;
 
     ByteVectorType() {
-        super("byteVector", TypeCodec.BYTE_VECTOR, TypeCodec.NULLABLE_BYTE_VECTOR_TYPE);
+        super("byteVector", ValuesCodecs.BYTE_VECTOR, ValuesCodecs.NULLABLE_BYTE_VECTOR_TYPE);
     }
 
     /**

@@ -46,7 +46,7 @@ final class UnicodeString extends NotStopBitEncodedTypeCodec {
      */
     public byte[] encodeValue(ScalarValue value) {
         byte[] utf8encoding = ((StringValue) value).value.getBytes(StandardCharsets.UTF_8);
-        return TypeCodec.BYTE_VECTOR.encode(new ByteVectorValue(utf8encoding));
+        return ValuesCodecs.BYTE_VECTOR.encode(new ByteVectorValue(utf8encoding));
     }
 
     /**

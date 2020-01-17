@@ -55,8 +55,8 @@ final class SingleFieldDecimal extends TypeCodec {
             if (Math.abs(value.exponent) > 63) {
                 Global.handleError(FastConstants.R1_LARGE_DECIMAL, "Encountered exponent of size " + value.exponent);
             }
-            buffer.write(TypeCodec.INTEGER.encode(new IntegerValue(value.exponent)));
-            buffer.write(TypeCodec.INTEGER.encode(new LongValue(value.mantissa)));
+            buffer.write(ValuesCodecs.INTEGER.encode(new IntegerValue(value.exponent)));
+            buffer.write(ValuesCodecs.INTEGER.encode(new LongValue(value.mantissa)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -71,11 +71,11 @@ final class SingleFieldDecimal extends TypeCodec {
      * @return Returns a decimalValue object with the data stream
      */
     public ScalarValue decode(InputStream in) {
-        int exponent = TypeCodec.INTEGER.decode(in).toInt();
+        int exponent = ValuesCodecs.INTEGER.decode(in).toInt();
         if (Math.abs(exponent) > 63) {
             Global.handleError(FastConstants.R1_LARGE_DECIMAL, "Encountered exponent of size " + exponent);
         }
-        long mantissa = TypeCodec.INTEGER.decode(in).toLong();
+        long mantissa = ValuesCodecs.INTEGER.decode(in).toLong();
         DecimalValue decimalValue = new DecimalValue(mantissa, exponent);
         return decimalValue;
     }

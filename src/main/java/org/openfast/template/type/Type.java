@@ -28,6 +28,7 @@ import org.openfast.ScalarValue;
 import org.openfast.StringValue;
 import org.openfast.template.operator.Operator;
 import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 import org.openfast.util.Util;
 
 public abstract class Type implements Serializable {
@@ -82,7 +83,7 @@ public abstract class Type implements Serializable {
     public final static Type I16 = new SignedIntegerType(16, Short.MIN_VALUE, Short.MAX_VALUE);
     public final static Type I32 = new SignedIntegerType(32, Integer.MIN_VALUE, Integer.MAX_VALUE);
     public final static Type I64 = new SignedIntegerType(64, Long.MIN_VALUE, Long.MAX_VALUE);
-    public final static Type STRING = new StringType("string", TypeCodec.ASCII, TypeCodec.NULLABLE_ASCII) {
+    public final static Type STRING = new StringType("string", ValuesCodecs.ASCII, ValuesCodecs.NULLABLE_ASCII) {
         private static final long serialVersionUID = 1L;
 
         public ScalarValue getValue(byte[] bytes) {
@@ -92,7 +93,7 @@ public abstract class Type implements Serializable {
             return new StringValue(new String(bytes, offset, length));
         }
     };
-    public final static Type ASCII = new StringType("ascii", TypeCodec.ASCII, TypeCodec.NULLABLE_ASCII) {
+    public final static Type ASCII = new StringType("ascii", ValuesCodecs.ASCII, ValuesCodecs.NULLABLE_ASCII) {
         private static final long serialVersionUID = 1L;
 
         public ScalarValue getValue(byte[] bytes) {
@@ -102,7 +103,7 @@ public abstract class Type implements Serializable {
             return new StringValue(new String(bytes, offset, length));
         }
     };
-    public final static Type UNICODE = new StringType("unicode", TypeCodec.UNICODE, TypeCodec.NULLABLE_UNICODE) {
+    public final static Type UNICODE = new StringType("unicode", ValuesCodecs.UNICODE, ValuesCodecs.NULLABLE_UNICODE) {
         private static final long serialVersionUID = 1L;
 
         public ScalarValue getValue(byte[] bytes) {

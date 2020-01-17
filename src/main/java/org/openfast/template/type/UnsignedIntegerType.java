@@ -22,12 +22,13 @@ package org.openfast.template.type;
 
 import org.openfast.template.operator.Operator;
 import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 
 public class UnsignedIntegerType extends IntegerType {
     private static final long serialVersionUID = 1L;
 
     public UnsignedIntegerType(int numberBits, long maxValue) {
-        super("uInt" + numberBits, 0, maxValue, TypeCodec.UINT, TypeCodec.NULLABLE_UNSIGNED_INTEGER);
+        super("uInt" + numberBits, 0, maxValue, ValuesCodecs.UINT, ValuesCodecs.NULLABLE_UNSIGNED_INTEGER);
     }
 
     /**
@@ -42,9 +43,9 @@ public class UnsignedIntegerType extends IntegerType {
     public TypeCodec getCodec(Operator operator, boolean optional) {
         if (operator.equals(Operator.DELTA))
             if (optional)
-                return TypeCodec.NULLABLE_INTEGER;
+                return ValuesCodecs.NULLABLE_INTEGER;
             else
-                return TypeCodec.INTEGER;
+                return ValuesCodecs.INTEGER;
         return super.getCodec(operator, optional);
     }
 }

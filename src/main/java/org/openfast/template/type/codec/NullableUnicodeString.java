@@ -46,9 +46,9 @@ final class NullableUnicodeString extends NotStopBitEncodedTypeCodec {
      */
     public byte[] encodeValue(ScalarValue value) {
         if (value.isNull())
-            return TypeCodec.NULLABLE_BYTE_VECTOR_TYPE.encodeValue(ScalarValue.NULL);
+            return ValuesCodecs.NULLABLE_BYTE_VECTOR_TYPE.encodeValue(ScalarValue.NULL);
         byte[] utf8encoding = ((StringValue) value).value.getBytes(StandardCharsets.UTF_8);
-        return TypeCodec.NULLABLE_BYTE_VECTOR_TYPE.encode(new ByteVectorValue(utf8encoding));
+        return ValuesCodecs.NULLABLE_BYTE_VECTOR_TYPE.encode(new ByteVectorValue(utf8encoding));
     }
 
     /**

@@ -31,14 +31,14 @@ public class TimestampInteger extends TypeCodec {
     private static final long serialVersionUID = 1L;
 
     public ScalarValue decode(InputStream in) {
-        int intValue = ((IntegerValue) TypeCodec.UINT.decode(in)).value;
+        int intValue = ((IntegerValue) ValuesCodecs.UINT.decode(in)).value;
         return new DateValue(Util.toTimestamp(intValue));
     }
 
     public byte[] encodeValue(ScalarValue value) {
         Date date = ((DateValue) value).value;
         int intValue = Util.timestampToInt(date);
-        return TypeCodec.UINT.encode(new IntegerValue(intValue));
+        return ValuesCodecs.UINT.encode(new IntegerValue(intValue));
     }
 
     public boolean equals(Object obj) {

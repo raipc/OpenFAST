@@ -56,8 +56,8 @@ final class NullableSingleFieldDecimal extends TypeCodec {
             if (Math.abs(value.exponent) > 63) {
                 Global.handleError(FastConstants.R1_LARGE_DECIMAL, "");
             }
-            buffer.write(TypeCodec.NULLABLE_INTEGER.encode(new IntegerValue(value.exponent)));
-            buffer.write(TypeCodec.INTEGER.encode(new LongValue(value.mantissa)));
+            buffer.write(ValuesCodecs.NULLABLE_INTEGER.encode(new IntegerValue(value.exponent)));
+            buffer.write(ValuesCodecs.INTEGER.encode(new LongValue(value.mantissa)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -72,12 +72,12 @@ final class NullableSingleFieldDecimal extends TypeCodec {
      * @return Returns a decimalValue object with the data stream
      */
     public ScalarValue decode(InputStream in) {
-        ScalarValue exp = TypeCodec.NULLABLE_INTEGER.decode(in);
+        ScalarValue exp = ValuesCodecs.NULLABLE_INTEGER.decode(in);
         if ((exp == null) || exp.isNull()) {
             return null;
         }
         int exponent = ((NumericValue) exp).toInt();
-        long mantissa = ((NumericValue) TypeCodec.INTEGER.decode(in)).toLong();
+        long mantissa = ((NumericValue) ValuesCodecs.INTEGER.decode(in)).toLong();
         DecimalValue decimalValue = new DecimalValue(mantissa, exponent);
         return decimalValue;
     }

@@ -44,7 +44,7 @@ import org.openfast.Node;
 import org.openfast.QName;
 import org.openfast.error.FastConstants;
 import org.openfast.error.FastException;
-import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 
 public class Group extends Field {
     private static final long serialVersionUID = 1L;
@@ -253,7 +253,7 @@ public class Group extends Field {
      */
     protected FieldValue[] decodeFieldValues(InputStream in, Group template, Context context) {
         if (usesPresenceMap()) {
-            BitVector pmap = ((BitVectorValue) TypeCodec.BIT_VECTOR.decode(in)).value;
+            BitVector pmap = ((BitVectorValue) ValuesCodecs.BIT_VECTOR.decode(in)).value;
             if (context.isTraceEnabled())
                 context.getDecodeTrace().pmap(pmap.getBytes());
             if (pmap.isOverlong())

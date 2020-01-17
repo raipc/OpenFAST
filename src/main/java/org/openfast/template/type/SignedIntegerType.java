@@ -20,12 +20,12 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast.template.type;
 
-import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 
 public class SignedIntegerType extends IntegerType {
     private static final long serialVersionUID = 1L;
 
     public SignedIntegerType(int numberBits, long min, long max) {
-        super("int" + numberBits, min, max, TypeCodec.INTEGER, TypeCodec.NULLABLE_INTEGER);
+        super("int" + numberBits, min, max, ValuesCodecs.INTEGER, ValuesCodecs.NULLABLE_INTEGER);
     }
 }

@@ -24,6 +24,7 @@ import org.openfast.ScalarValue;
 import org.openfast.StringValue;
 import org.openfast.template.operator.Operator;
 import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 
 public class StringType extends SimpleType {
     private static final long serialVersionUID = 1L;
@@ -51,7 +52,7 @@ public class StringType extends SimpleType {
      */
     public TypeCodec getCodec(Operator operator, boolean optional) {
         if (operator == Operator.DELTA)
-            return (optional) ? TypeCodec.NULLABLE_STRING_DELTA : TypeCodec.STRING_DELTA;
+            return (optional) ? ValuesCodecs.NULLABLE_STRING_DELTA : ValuesCodecs.STRING_DELTA;
         return super.getCodec(operator, optional);
     }
 

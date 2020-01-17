@@ -47,7 +47,7 @@ public final class NullableUnsignedInteger extends IntegerCodec {
         if (v.isNull()) {
             return TypeCodec.NULL_VALUE_ENCODING;
         }
-        return TypeCodec.UINT.encodeValue(((NumericValue) v).increment());
+        return ValuesCodecs.UINT.encodeValue(((NumericValue) v).increment());
     }
 
     /**

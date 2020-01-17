@@ -38,10 +38,10 @@ public class NullableStringDelta extends TypeCodec {
      * @return Returns a new TwinValue object with the data as its parameters
      */
     public ScalarValue decode(InputStream in) {
-        ScalarValue subtractionLength = TypeCodec.NULLABLE_INTEGER.decode(in);
+        ScalarValue subtractionLength = ValuesCodecs.NULLABLE_INTEGER.decode(in);
         if (subtractionLength == null)
             return null;
-        ScalarValue difference = TypeCodec.ASCII.decode(in);
+        ScalarValue difference = ValuesCodecs.ASCII.decode(in);
         return new TwinValue(subtractionLength, difference);
     }
 
@@ -56,8 +56,8 @@ public class NullableStringDelta extends TypeCodec {
         if (value.isNull())
             return TypeCodec.NULL_VALUE_ENCODING;
         TwinValue diff = (TwinValue) value;
-        byte[] subtractionLength = TypeCodec.NULLABLE_INTEGER.encode(diff.first);
-        byte[] difference = TypeCodec.ASCII.encode(diff.second);
+        byte[] subtractionLength = ValuesCodecs.NULLABLE_INTEGER.encode(diff.first);
+        byte[] difference = ValuesCodecs.ASCII.encode(diff.second);
         byte[] encoded = new byte[subtractionLength.length + difference.length];
         System.arraycopy(subtractionLength, 0, encoded, 0, subtractionLength.length);
         System.arraycopy(difference, 0, encoded, subtractionLength.length, difference.length);

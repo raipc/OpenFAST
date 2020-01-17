@@ -45,9 +45,9 @@ public final class NullableSignedInteger extends IntegerCodec {
         }
         NumericValue intValue = (NumericValue) value;
         if (intValue.toLong() >= 0) {
-            return TypeCodec.INTEGER.encodeValue(intValue.increment());
+            return ValuesCodecs.INTEGER.encodeValue(intValue.increment());
         } else {
-            return TypeCodec.INTEGER.encodeValue(intValue);
+            return ValuesCodecs.INTEGER.encodeValue(intValue);
         }
     }
 
@@ -60,7 +60,7 @@ public final class NullableSignedInteger extends IntegerCodec {
      * @return Returns a new numericValue object
      */
     public ScalarValue decode(InputStream in) {
-        NumericValue numericValue = ((NumericValue) TypeCodec.INTEGER.decode(in));
+        NumericValue numericValue = ((NumericValue) ValuesCodecs.INTEGER.decode(in));
         long value = numericValue.toLong();
         if (value == 0) {
             return null;

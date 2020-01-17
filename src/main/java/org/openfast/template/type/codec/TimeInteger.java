@@ -31,7 +31,7 @@ public class TimeInteger extends TypeCodec {
     private static final long serialVersionUID = 1L;
 
     public ScalarValue decode(InputStream in) {
-        int intValue = ((IntegerValue) TypeCodec.UINT.decode(in)).value;
+        int intValue = ((IntegerValue) ValuesCodecs.UINT.decode(in)).value;
         int hour = intValue / 10000000;
         intValue -= hour * 10000000;
         int minute = intValue / 100000;
@@ -45,7 +45,7 @@ public class TimeInteger extends TypeCodec {
     public byte[] encodeValue(ScalarValue value) {
         Date date = ((DateValue) value).value;
         int intValue = Util.timeToInt(date);
-        return TypeCodec.UINT.encode(new IntegerValue(intValue));
+        return ValuesCodecs.UINT.encode(new IntegerValue(intValue));
     }
 
     public boolean equals(Object obj) {
