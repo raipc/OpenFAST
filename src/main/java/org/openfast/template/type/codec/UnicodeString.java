@@ -57,7 +57,7 @@ final class UnicodeString extends NotStopBitEncodedTypeCodec {
      * @return Returns a new StringValue object with the data stream as a String
      */
     public ScalarValue decode(InputStream in) {
-        int length = (int) UnsignedInteger.decodeUInt(in);
+        int length = (int) DecodeHelpers.decodeUInt(in);
         if (length <= 0) {
             return null;
         }

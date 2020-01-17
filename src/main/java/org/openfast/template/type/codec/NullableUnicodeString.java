@@ -60,7 +60,7 @@ final class NullableUnicodeString extends NotStopBitEncodedTypeCodec {
      *         parameters
      */
     public ScalarValue decode(InputStream in) {
-        final int length = (int)UnsignedInteger.decodeUInt(in) - 1;
+        final int length = (int) DecodeHelpers.decodeUInt(in) - 1;
         if (length < 0) {
             return null;
         }

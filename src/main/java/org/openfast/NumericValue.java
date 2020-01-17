@@ -20,6 +20,9 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 */
 package org.openfast;
 
+import org.openfast.template.LongValue;
+import org.openfast.util.Util;
+
 public abstract class NumericValue extends ScalarValue {
     private static final long serialVersionUID = 1L;
     public abstract NumericValue increment();
@@ -29,4 +32,8 @@ public abstract class NumericValue extends ScalarValue {
     public abstract boolean equals(int value);
     public abstract long toLong();
     public abstract int toInt();
+
+    public static NumericValue create(long value) {
+        return Util.isBiggerThanInt(value) ? new LongValue(value) : new IntegerValue((int)value);
+    }
 }

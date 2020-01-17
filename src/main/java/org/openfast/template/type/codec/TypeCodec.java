@@ -22,6 +22,7 @@ package org.openfast.template.type.codec;
 
 import java.io.InputStream;
 import java.io.Serializable;
+
 import org.openfast.ScalarValue;
 
 public abstract class TypeCodec implements Serializable {

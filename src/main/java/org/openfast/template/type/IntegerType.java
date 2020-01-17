@@ -22,11 +22,11 @@ package org.openfast.template.type;
 
 import org.openfast.Global;
 import org.openfast.IntegerValue;
+import org.openfast.NumericValue;
 import org.openfast.ScalarValue;
 import org.openfast.error.FastConstants;
 import org.openfast.template.LongValue;
 import org.openfast.template.type.codec.TypeCodec;
-import org.openfast.util.Util;
 
 public abstract class IntegerType extends SimpleType {
     private static final long serialVersionUID = 1L;
@@ -52,10 +52,7 @@ public abstract class IntegerType extends SimpleType {
                     + this);
             return null;
         }
-        if (Util.isBiggerThanInt(longValue)) {
-            return new LongValue(longValue);
-        }
-        return new IntegerValue((int) longValue);
+        return NumericValue.create(longValue);
     }
     /**
      * @return Returns a default value

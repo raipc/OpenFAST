@@ -61,7 +61,7 @@ final class ByteVectorType extends TypeCodec {
      *         array
      */
     public ScalarValue decode(InputStream in) {
-        int length = (int)UnsignedInteger.decodeUInt(in);
+        int length = (int) DecodeHelpers.decodeUInt(in);
         byte[] encoding = new byte[length];
         return decodeByteBuffer(encoding, length, in) ? new ByteVectorValue(encoding) : null;
     }

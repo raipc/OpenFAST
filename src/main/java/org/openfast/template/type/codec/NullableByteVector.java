@@ -38,7 +38,7 @@ public class NullableByteVector extends NotStopBitEncodedTypeCodec {
      *         array
      */
     public ScalarValue decode(InputStream in) {
-        int length = (int)UnsignedInteger.decodeUInt(in) - 1; // nullable -> decrement
+        int length = (int) DecodeHelpers.decodeUInt(in) - 1; // nullable -> decrement
         if (length < 0) {
             return null;
         }

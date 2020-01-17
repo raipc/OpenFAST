@@ -23,12 +23,10 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast.template.type.codec;
 
-import java.io.IOException;
 import java.io.InputStream;
 
-import org.openfast.Global;
+import org.openfast.NumericValue;
 import org.openfast.ScalarValue;
-import org.openfast.error.FastConstants;
 
 public final class UnsignedInteger extends IntegerCodec {
     private static final long serialVersionUID = 1L;
@@ -59,27 +57,8 @@ public final class UnsignedInteger extends IntegerCodec {
      * @return the decoded value from the fast input stream
      */
     public ScalarValue decode(InputStream in) {
-        long value = decodeUInt(in);
-        return value < 0 ? null : createValue(value);
-    }
-
-    public static long decodeUInt(InputStream in) {
-        long value = 0;
-        int byt;
-        try {
-            do {
-                byt = in.read();
-                if (byt < 0) {
-                    Global.handleError(FastConstants.END_OF_STREAM, "The end of the input stream has been reached.");
-                    return -1; // short circuit if global error handler does not throw exception
-                }
-                value = (value << 7) | (byt & 0x7f);
-            } while ((byt & 0x80) == 0);
-        } catch (IOException e) {
-            Global.handleError(FastConstants.IO_ERROR, "A IO error has been encountered while decoding.", e);
-            return -1; // short circuit if global error handler does not throw exception
-        }
-        return value;
+        long value = DecodeHelpers.decodeUInt(in);
+        return value < 0 ? null : NumericValue.create(value);
     }
 
     public boolean equals(Object obj) {

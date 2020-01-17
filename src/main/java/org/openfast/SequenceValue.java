@@ -27,14 +27,19 @@ import org.openfast.template.Sequence;
 
 public class SequenceValue implements FieldValue {
     private static final long serialVersionUID = 1L;
-    private ArrayList<GroupValue> elements = new ArrayList<>();
-    private Sequence sequence;
+    private final ArrayList<GroupValue> elements;
+    private final Sequence sequence;
 
     public SequenceValue(Sequence sequence) {
+        this(sequence, new ArrayList<>());
+    }
+
+    public SequenceValue(Sequence sequence, ArrayList<GroupValue> elements) {
         if (sequence == null) {
             throw new NullPointerException();
         }
         this.sequence = sequence;
+        this.elements = elements;
     }
 
     public int getLength() {
@@ -100,12 +105,11 @@ public class SequenceValue implements FieldValue {
     }
 
     public GroupValue[] getValues() {
-        return this.elements.toArray(new GroupValue[elements.size()]);
+        return this.elements.toArray(new GroupValue[0]);
     }
 
     public FieldValue copy() {
-        SequenceValue value = new SequenceValue(this.sequence);
-        value.elements.ensureCapacity(elements.size());
+        SequenceValue value = new SequenceValue(this.sequence, new ArrayList<>(elements.size()));
         for (int i = 0; i < elements.size(); i++) {
             value.add((GroupValue) elements.get(i).copy());
         }

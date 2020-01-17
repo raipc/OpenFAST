@@ -23,6 +23,7 @@ package org.openfast.template;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.openfast.BitVectorBuilder;
@@ -196,14 +197,15 @@ public class Sequence extends Field implements FieldSet {
      *         sequenceValue object that has the decoded information stored.
      */
     public FieldValue decode(InputStream in, Group template, Context context, BitVectorReader pmapReader) {
-        SequenceValue sequenceValue = new SequenceValue(this);
         ScalarValue lengthValue = length.decode(in, template, context, pmapReader);
         if ((lengthValue == ScalarValue.NULL) || (lengthValue == null)) {
             return null;
         }
         int len = lengthValue.toInt();
-        for (int i = 0; i < len; i++)
+        SequenceValue sequenceValue = new SequenceValue(this, new ArrayList<>(len));
+        for (int i = 0; i < len; i++) {
             sequenceValue.add(group.decode(in, template, context, BitVectorReader.INFINITE_TRUE));
+        }
         return sequenceValue;
     }
 

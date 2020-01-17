@@ -24,6 +24,8 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 package org.openfast.template.type.codec;
 
 import java.io.InputStream;
+
+import org.openfast.Global;
 import org.openfast.NumericValue;
 import org.openfast.ScalarValue;
 
@@ -60,15 +62,12 @@ public final class NullableSignedInteger extends IntegerCodec {
      * @return Returns a new numericValue object
      */
     public ScalarValue decode(InputStream in) {
-        NumericValue numericValue = ((NumericValue) ValuesCodecs.INTEGER.decode(in));
-        long value = numericValue.toLong();
-        if (value == 0) {
+        final ErrorContext errorContext = Global.getErrorContext();
+        final long value = DecodeHelpers.decodeInt(in, errorContext);
+        if (errorContext.hasError || value == 0) {
             return null;
         }
-        if (value > 0) {
-            return numericValue.decrement();
-        }
-        return numericValue;
+        return value > 0 ? NumericValue.create(value - 1) : NumericValue.create(value);
     }
 
     /**

@@ -64,6 +64,10 @@ final class NullableSingleFieldDecimal extends TypeCodec {
         return buffer.toByteArray();
     }
 
+    public static void main(String[] args) {
+        System.out.println(Long.MIN_VALUE);
+    }
+
     /**
      * Reads in a stream of data and stores it to a decimalValue object
      * 
@@ -72,6 +76,8 @@ final class NullableSingleFieldDecimal extends TypeCodec {
      * @return Returns a decimalValue object with the data stream
      */
     public ScalarValue decode(InputStream in) {
+//        Long.MIN_VALUE
+//        ValuesCodecs.NULLABLE_INTEGER.
         ScalarValue exp = ValuesCodecs.NULLABLE_INTEGER.decode(in);
         if ((exp == null) || exp.isNull()) {
             return null;
