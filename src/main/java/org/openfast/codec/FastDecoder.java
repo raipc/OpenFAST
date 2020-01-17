@@ -30,7 +30,7 @@ import org.openfast.Context;
 import org.openfast.Message;
 import org.openfast.error.FastException;
 import org.openfast.template.MessageTemplate;
-import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 
 /**
  * A FastDecoder is the core class for reading and decoding FAST messages from any input stream.  This class can be used
@@ -61,7 +61,7 @@ public class FastDecoder implements Coder {
      * @throws FastException if a decoding error occurs or the end of the input stream has been reached
      */
     public Message readMessage() throws FastException {
-        BitVectorValue bitVectorValue = (BitVectorValue) TypeCodec.BIT_VECTOR.decode(in);
+        BitVectorValue bitVectorValue = (BitVectorValue) ValuesCodecs.BIT_VECTOR.decode(in);
         if (bitVectorValue == null) {
             return null;
         }
@@ -69,7 +69,7 @@ public class FastDecoder implements Coder {
         BitVectorReader presenceMapReader = new BitVectorReader(pmap);
 
         // if template id is not present, use previous, else decode template id
-        int templateId = (presenceMapReader.read()) ? TypeCodec.UINT.decode(in).toInt() : context.getLastTemplateId();
+        int templateId = (presenceMapReader.read()) ? ValuesCodecs.UINT.decode(in).toInt() : context.getLastTemplateId();
         MessageTemplate template = context.getTemplate(templateId);
 
         if (template == null) {

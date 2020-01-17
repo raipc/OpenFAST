@@ -12,6 +12,6 @@ public class EpochTimestampTest extends OpenFastTestCase {
         cal.set(2007, 7, 7, 12, 0, 0);
         cal.set(Calendar.MILLISECOND, 0);
         assertEncodeDecode(new DateValue(cal.getTime()), "00100010 01000100 00000001 01001000 00111100 10000000",
-                TypeCodec.EPOCH_TIMESTAMP);
+                ValuesCodecs.EPOCH_TIMESTAMP);
     }
 }

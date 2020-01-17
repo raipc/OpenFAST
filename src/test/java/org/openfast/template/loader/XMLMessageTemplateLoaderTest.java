@@ -37,7 +37,7 @@ import org.openfast.template.Scalar;
 import org.openfast.template.Sequence;
 import org.openfast.template.operator.Operator;
 import org.openfast.template.type.Type;
-import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 import org.openfast.test.OpenFastTestCase;
 import org.w3c.dom.Element;
 
@@ -126,10 +126,10 @@ public class XMLMessageTemplateLoaderTest extends OpenFastTestCase {
         assertFalse(location.isOptional());
         assertTrue(id2.isOptional());
         
-        assertEquals(TypeCodec.UNICODE, name.getTypeCodec());
-        assertEquals(TypeCodec.NULLABLE_UNICODE, id.getTypeCodec());
-        assertEquals(TypeCodec.ASCII, location.getTypeCodec());
-        assertEquals(TypeCodec.NULLABLE_ASCII, id2.getTypeCodec());
+        assertEquals(ValuesCodecs.UNICODE, name.getTypeCodec());
+        assertEquals(ValuesCodecs.NULLABLE_UNICODE, id.getTypeCodec());
+        assertEquals(ValuesCodecs.ASCII, location.getTypeCodec());
+        assertEquals(ValuesCodecs.NULLABLE_ASCII, id2.getTypeCodec());
     }
     
     public void testLoadMdIncrementalRefreshTemplate() {

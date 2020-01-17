@@ -30,7 +30,7 @@ import org.openfast.error.FastConstants;
 import org.openfast.error.FastException;
 import org.openfast.template.Scalar;
 import org.openfast.template.type.Type;
-import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 import org.openfast.test.OpenFastTestCase;
 
 
@@ -131,6 +131,6 @@ public class DeltaDecimalOperatorTest extends OpenFastTestCase {
     }
     
     public void testEncodeDecimalValueWithOptionalField() {
-    	assertEncodeDecode(d(-37.0), "10000001 11011011", TypeCodec.NULLABLE_SF_SCALED_NUMBER);
+    	assertEncodeDecode(d(-37.0), "10000001 11011011", ValuesCodecs.NULLABLE_SF_SCALED_NUMBER);
     }
 }

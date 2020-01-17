@@ -35,7 +35,7 @@ import org.openfast.test.OpenFastTestCase;
 
 public class StringDeltaTest extends OpenFastTestCase {
     public void testEncodeValue() {
-        assertEncodeDecode(twin(i(1), string("A")), "10000001 11000001", TypeCodec.STRING_DELTA);
+        assertEncodeDecode(twin(i(1), string("A")), "10000001 11000001", ValuesCodecs.STRING_DELTA);
     }
     
     public void testNullValue() {

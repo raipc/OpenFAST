@@ -26,14 +26,13 @@ import org.openfast.DecimalValue;
 import org.openfast.error.FastConstants;
 import org.openfast.error.FastException;
 
-import org.openfast.template.type.codec.TypeCodec;
 import org.openfast.test.OpenFastTestCase;
 
 
 public class SingleFieldDecimalTest extends OpenFastTestCase {
     public void testEncodeDecodeBoundary() {
-        assertEncodeDecode(new DecimalValue(Long.MAX_VALUE, 63), "10111111 00000000 01111111 01111111 01111111 01111111 01111111 01111111 01111111 01111111 11111111", TypeCodec.SF_SCALED_NUMBER);
-        assertEncodeDecode(new DecimalValue(Long.MIN_VALUE, -63), "11000001 01111111 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 10000000", TypeCodec.SF_SCALED_NUMBER);
+        assertEncodeDecode(new DecimalValue(Long.MAX_VALUE, 63), "10111111 00000000 01111111 01111111 01111111 01111111 01111111 01111111 01111111 01111111 11111111", ValuesCodecs.SF_SCALED_NUMBER);
+        assertEncodeDecode(new DecimalValue(Long.MIN_VALUE, -63), "11000001 01111111 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 10000000", ValuesCodecs.SF_SCALED_NUMBER);
     }
     
     public void testEncodeDecode() {
@@ -45,12 +44,12 @@ public class SingleFieldDecimalTest extends OpenFastTestCase {
         assertEncodeDecode(1000, "10000011 10000001");
         assertEncodeDecode(d(9427550, 1),
             "10000001 00000100 00111111 00110100 11011110",
-            TypeCodec.SF_SCALED_NUMBER);
+            ValuesCodecs.SF_SCALED_NUMBER);
     }
 
     public void testEncodeLargeDecimalReportsError() {
         try {
-            TypeCodec.SF_SCALED_NUMBER.encode(d(150, 64));
+            ValuesCodecs.SF_SCALED_NUMBER.encode(d(150, 64));
             fail();
         } catch (FastException e) {
             assertEquals(FastConstants.R1_LARGE_DECIMAL, e.getCode());
@@ -60,7 +59,7 @@ public class SingleFieldDecimalTest extends OpenFastTestCase {
 
     public void testDecodeLargeDecimalReportsError() {
         try {
-            TypeCodec.SF_SCALED_NUMBER.decode(bitStream("00000001 11111111 10000001"));
+            ValuesCodecs.SF_SCALED_NUMBER.decode(bitStream("00000001 11111111 10000001"));
             fail();
         } catch (FastException e) {
             assertEquals(FastConstants.R1_LARGE_DECIMAL, e.getCode());
@@ -69,6 +68,6 @@ public class SingleFieldDecimalTest extends OpenFastTestCase {
     }
 
     private void assertEncodeDecode(double value, String bitString) {
-        assertEncodeDecode(d(value), bitString, TypeCodec.SF_SCALED_NUMBER);
+        assertEncodeDecode(d(value), bitString, ValuesCodecs.SF_SCALED_NUMBER);
     }
 }

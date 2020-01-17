@@ -1,13 +1,12 @@
 package org.openfast.impl;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.DataOutputStream;
+
 import org.openfast.IntegerValue;
 import org.openfast.Message;
 import org.openfast.MessageBlockWriter;
-import org.openfast.template.type.codec.TypeCodec;
+import org.openfast.template.type.codec.ValuesCodecs;
 
 /** 
  * Write the CME "length indicator" and "preamble" headers.
@@ -22,7 +21,7 @@ public class CmeTcpReplayMessageBlockWriter implements MessageBlockWriter {
     }
 
     final static byte[] encodeTotalLen(int encodedMessageLen, int preambleLen) {
-        byte [] result = TypeCodec.UINT.encodeValue(new IntegerValue(preambleLen + encodedMessageLen));
+        byte [] result = ValuesCodecs.UINT.encodeValue(new IntegerValue(preambleLen + encodedMessageLen));
         final int endIndex = result.length - 1;
         result[endIndex] = (byte)(result[endIndex] | (byte)0x80); // set stop bit
         return result;
