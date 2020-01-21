@@ -30,6 +30,7 @@ import org.openfast.Context;
 import org.openfast.Message;
 import org.openfast.error.FastException;
 import org.openfast.template.MessageTemplate;
+import org.openfast.template.type.codec.DecodeHelpers;
 import org.openfast.template.type.codec.ValuesCodecs;
 
 /**
@@ -69,7 +70,7 @@ public class FastDecoder implements Coder {
         BitVectorReader presenceMapReader = new BitVectorReader(pmap);
 
         // if template id is not present, use previous, else decode template id
-        int templateId = (presenceMapReader.read()) ? ValuesCodecs.UINT.decode(in).toInt() : context.getLastTemplateId();
+        int templateId = (presenceMapReader.read()) ? (int)DecodeHelpers.decodeUInt(in) : context.getLastTemplateId();
         MessageTemplate template = context.getTemplate(templateId);
 
         if (template == null) {

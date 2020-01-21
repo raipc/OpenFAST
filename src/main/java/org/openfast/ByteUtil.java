@@ -91,8 +91,9 @@ public class ByteUtil {
                 builder.append('0');
             builder.append(bits).append(' ');
         }
-        if (builder.length() > 0)
-            builder.deleteCharAt(builder.length() - 1);
+        if (builder.length() > 0) {
+            builder.setLength(builder.length() - 1);
+        }
         return builder.toString();
     }
 

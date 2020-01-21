@@ -11,6 +11,7 @@ import org.openfast.QName;
 import org.openfast.ScalarValue;
 import org.openfast.template.Field;
 import org.openfast.template.Group;
+import org.openfast.template.type.codec.DecodeHelpers;
 import org.openfast.template.type.codec.ValuesCodecs;
 
 public class MapScalar extends Field {
@@ -26,12 +27,13 @@ public class MapScalar extends Field {
 
     public FieldValue decode(InputStream in, Group template, Context context, BitVectorReader presenceMapReader) {
         boolean newDefinition = presenceMapReader.read();
-        int index = ValuesCodecs.UINT.decode(in).toInt();
+        int index = (int)DecodeHelpers.decodeUInt(in);
         if (index == 0) {
             return ScalarValue.NULL;
         }
-        if (!newDefinition)
+        if (!newDefinition) {
             return context.getCache(getKey()).lookup(index);
+        }
         ScalarValue value = ValuesCodecs.ASCII.decode(in);
         context.store(getKey(), index, value);
         return value;

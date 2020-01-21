@@ -78,12 +78,12 @@ public class Context implements OpenFastContext {
         return templateRegistry.getId(template);
     }
     public MessageTemplate getTemplate(int templateId) {
-        if (!templateRegistry.isRegistered(templateId)) {
+        final MessageTemplate messageTemplate = templateRegistry.get(templateId);
+        if (messageTemplate == null) {
             errorHandler.error(FastConstants.D9_TEMPLATE_NOT_REGISTERED, "The template with id " + templateId
                     + " has not been registered.");
-            return null;
         }
-        return templateRegistry.get(templateId);
+        return messageTemplate;
     }
     public void registerTemplate(int templateId, MessageTemplate template) {
         templateRegistry.register(templateId, template);
@@ -98,16 +98,18 @@ public class Context implements OpenFastContext {
         lastTemplateId = templateId;
     }
     public ScalarValue lookup(String dictionary, Group group, QName key) {
-        if (group.hasTypeReference())
+        if (group.hasTypeReference()) {
             currentApplicationType = group.getTypeReference();
+        }
         return getDictionary(dictionary).lookup(group, key, currentApplicationType);
     }
     private Dictionary getDictionary(String dictionary) {
         return dictionaries.getDictionary(dictionary);
     }
     public void store(String dictionary, Group group, QName key, ScalarValue valueToEncode) {
-        if (group.hasTypeReference())
+        if (group.hasTypeReference()) {
             currentApplicationType = group.getTypeReference();
+        }
         getDictionary(dictionary).store(group, currentApplicationType, key, valueToEncode);
     }
     public void reset() {
