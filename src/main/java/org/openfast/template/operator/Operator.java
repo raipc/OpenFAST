@@ -20,9 +20,7 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast.template.operator;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Locale;
 
 import org.openfast.Global;
 import org.openfast.ScalarValue;
@@ -30,16 +28,8 @@ import org.openfast.error.FastConstants;
 import org.openfast.template.Scalar;
 import org.openfast.template.type.Type;
 
-public class Operator implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private static final Map<String, Operator> OPERATOR_NAME_MAP = new HashMap<>();
-
-    private final String name;
-
-    public static final Operator NONE = new Operator("none") {
-        private static final long serialVersionUID = 2L;
-
+public enum Operator {
+    NONE {
         public boolean usesDictionary() {
             return false;
         }
@@ -47,15 +37,12 @@ public class Operator implements Serializable {
         public boolean shouldStoreValue(ScalarValue value) {
             return false;
         }
-    };
-    
-    public static final Operator CONSTANT = new Operator("constant") {
-        private static final long serialVersionUID = 1L;
-
+    },
+    CONSTANT {
         public void validate(Scalar scalar) {
             if (scalar.getDefaultValue().isUndefined())
                 Global.handleError(FastConstants.S4_NO_INITIAL_VALUE_FOR_CONST, "The field " + scalar
-                        + " must have a default value defined.");
+                    + " must have a default value defined.");
         }
 
         public boolean shouldStoreValue(ScalarValue value) {
@@ -65,65 +52,48 @@ public class Operator implements Serializable {
         public boolean usesDictionary() {
             return false;
         }
-    };
-
-    public static final Operator DEFAULT = new Operator("default") {
-        private static final long serialVersionUID = 1L;
-
+    },
+    DEFAULT {
         public void validate(Scalar scalar) {
             if (!scalar.isOptional() && scalar.getDefaultValue().isUndefined())
                 Global.handleError(FastConstants.S5_NO_INITVAL_MNDTRY_DFALT, "The field " + scalar
-                        + " must have a default value defined.");
+                    + " must have a default value defined.");
         }
 
         public boolean shouldStoreValue(ScalarValue value) {
             return value != null;
         }
-    };
 
-    public static final Operator COPY = new Operator("copy") {
-        private static final long serialVersionUID = 1L;
-
+    },
+    COPY {
         public OperatorCodec getCodec(Type type) {
             return OperatorCodec.COPY_ALL;
         }
-    };
-
-    public static final Operator INCREMENT = new Operator("increment");
-
-    public static final Operator DELTA = new Operator("delta") {
-        private static final long serialVersionUID = 1L;
-
+    },
+    INCREMENT,
+    DELTA {
         public boolean shouldStoreValue(ScalarValue value) {
             return value != null;
         }
-    };
-
-    public static final Operator TAIL = new Operator("tail");
-
-    private Operator(String name) {
-        this.name = name;
-        OPERATOR_NAME_MAP.put(name, this);
-    }
+    },
+    TAIL;
 
     public static Operator getOperator(String name) {
-        Operator operator = OPERATOR_NAME_MAP.get(name);
-        if (operator == null) {
-            throw new IllegalArgumentException("The operator \"" + name + "\" does not exist.");
+        for (Operator operator : Operator.values()) {
+            if (operator.name().equalsIgnoreCase(name)) {
+                return operator;
+            }
         }
-        return operator;
+        throw new IllegalArgumentException("The operator \"" + name + "\" does not exist.");
     }
 
     public OperatorCodec getCodec(Type type) {
         return OperatorCodec.getCodec(this, type);
     }
 
+    @Override
     public String toString() {
-        return name;
-    }
-
-    public String getName() {
-        return name;
+        return name().toLowerCase(Locale.US);
     }
 
     public boolean shouldStoreValue(ScalarValue value) {
@@ -131,22 +101,7 @@ public class Operator implements Serializable {
     }
 
     public void validate(Scalar scalar) {
-    }
-
-    public boolean equals(Object other) {
-        if (other == this)
-            return true;
-        if (other == null || !(other instanceof Operator))
-            return false;
-        return equals((Operator) other);
-    }
-
-    public boolean equals(Operator other) {
-        return name.equals(other.name);
-    }
-
-    public int hashCode() {
-        return name.hashCode();
+        //do nothing
     }
 
     public boolean usesDictionary() {

@@ -20,7 +20,7 @@ public abstract class AbstractFieldSerializer implements FieldSerializer {
     }
 
     protected static void writeOperator(XmlWriter writer, Scalar scalar, SerializingContext context) {
-        writer.start(scalar.getOperator().getName());
+        writer.start(scalar.getOperator().toString());
         if (!scalar.getDictionary().equals(context.getDictionary())) {
             writer.addAttribute("dictionary", scalar.getDictionary());
         }
