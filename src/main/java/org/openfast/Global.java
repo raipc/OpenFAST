@@ -22,14 +22,12 @@ package org.openfast;
 
 import org.openfast.error.ErrorCode;
 import org.openfast.error.ErrorHandler;
-import org.openfast.template.type.codec.ErrorContext;
 import org.openfast.util.PatchableByteArrayOutputStream;
 
 public final class Global {
     private static ErrorHandler errorHandler = ErrorHandler.DEFAULT;
     private static int currentImplicitId = (int) (System.currentTimeMillis() % 10000);
     private static final ThreadLocal<PatchableByteArrayOutputStream> buffers = new ThreadLocal<>();
-    private static final ThreadLocal<ErrorContext> errorContexts = new ThreadLocal<>();
 
     public static void setErrorHandler(ErrorHandler handler) {
         if (handler == null) {
@@ -63,20 +61,6 @@ public final class Global {
                 
         buffer.reset();
         return buffer;
-    }
-
-    /**
-     * Get error context object from thread-local cache to eliminate allocations.
-     * Users must take care of setup and cleanup themselves.
-     * @return Error context
-     */
-    public static ErrorContext getErrorContext() {
-        ErrorContext errorContext = errorContexts.get();
-        if (errorContext == null) {
-            errorContext = new ErrorContext();
-            errorContexts.set(errorContext);
-        }
-        return errorContext;
     }
     
 }

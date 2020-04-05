@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 import org.openfast.DateValue;
+import org.openfast.DeserializationContext;
 import org.openfast.IntegerValue;
 import org.openfast.ScalarValue;
 import org.openfast.util.Util;
@@ -31,8 +32,8 @@ import org.openfast.util.Util;
 public class DateInteger extends TypeCodec {
     private static final long serialVersionUID = 1L;
 
-    public ScalarValue decode(InputStream in) {
-        long longValue = ((ScalarValue) ValuesCodecs.UINT.decode(in)).toLong();
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
+        long longValue = ((ScalarValue) ValuesCodecs.UINT.decode(in, deserializationContext)).toLong();
         int year = (int) (longValue / 10000);
         int month = (int) ((longValue - (year * 10000)) / 100);
         int day = (int) (longValue % 100);

@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import org.openfast.DateValue;
+import org.openfast.DeserializationContext;
 import org.openfast.Global;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
@@ -40,9 +41,9 @@ public class DateString extends TypeCodec {
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    public ScalarValue decode(InputStream in) {
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
         try {
-            return new DateValue(formatter.parse(ValuesCodecs.ASCII.decode(in).toString()));
+            return new DateValue(formatter.parse(ValuesCodecs.ASCII.decode(in, deserializationContext).toString()));
         } catch (ParseException e) {
             Global.handleError(FastConstants.PARSE_ERROR, "", e);
             return null;

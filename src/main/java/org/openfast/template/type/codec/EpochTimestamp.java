@@ -23,14 +23,15 @@ package org.openfast.template.type.codec;
 import java.io.InputStream;
 import java.util.Date;
 import org.openfast.DateValue;
+import org.openfast.DeserializationContext;
 import org.openfast.ScalarValue;
 import org.openfast.template.LongValue;
 
 public class EpochTimestamp extends TypeCodec {
     private static final long serialVersionUID = 1L;
 
-    public ScalarValue decode(InputStream in) {
-        return new DateValue(new Date(ValuesCodecs.INTEGER.decode(in).toLong()));
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
+        return new DateValue(new Date(ValuesCodecs.INTEGER.decode(in, deserializationContext).toLong()));
     }
 
     public byte[] encodeValue(ScalarValue value) {

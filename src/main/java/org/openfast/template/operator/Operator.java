@@ -101,7 +101,7 @@ public class Operator implements Serializable {
 
     public static final Operator TAIL = new Operator("tail");
 
-    public Operator(String name) {
+    private Operator(String name) {
         this.name = name;
         OPERATOR_NAME_MAP.put(name, this);
     }
@@ -141,7 +141,7 @@ public class Operator implements Serializable {
         return equals((Operator) other);
     }
 
-    private boolean equals(Operator other) {
+    public boolean equals(Operator other) {
         return name.equals(other.name);
     }
 

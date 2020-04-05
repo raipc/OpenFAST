@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.openfast.DecimalValue;
+import org.openfast.DeserializationContext;
 import org.openfast.Global;
 import org.openfast.IntegerValue;
 import org.openfast.ScalarValue;
@@ -68,10 +69,11 @@ final class SingleFieldDecimal extends TypeCodec {
      * 
      * @param in
      *            The InputStream to be decoded
+     * @param deserializationContext
      * @return Returns a decimalValue object with the data stream
      */
-    public ScalarValue decode(InputStream in) {
-        final ErrorContext errorContext = Global.getErrorContext();
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
+        final ErrorContext errorContext = deserializationContext.getErrorContext();
         final long exponent = DecodeHelpers.decodeInt(in, errorContext);
         if (errorContext.hasError) {
             return null;

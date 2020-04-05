@@ -1,12 +1,13 @@
 package org.openfast.template.type.codec;
 
-import org.openfast.template.LongValue;
-import org.openfast.test.OpenFastTestCase;
-
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.openfast.DeserializationContext;
+import org.openfast.template.LongValue;
+import org.openfast.test.OpenFastTestCase;
 
 public class UnsignedIntegerTest extends OpenFastTestCase {
 
@@ -38,7 +39,7 @@ public class UnsignedIntegerTest extends OpenFastTestCase {
         }
         for (long i : values) {
             byte[] bytes = ValuesCodecs.UINT.encode(new LongValue(i));
-            assertEquals(i, ValuesCodecs.UINT.decode(new ByteArrayInputStream(bytes)).toLong());
+            assertEquals(i, ValuesCodecs.UINT.decode(new ByteArrayInputStream(bytes), new DeserializationContext()).toLong());
         }
     }
 }

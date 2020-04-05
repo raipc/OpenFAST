@@ -25,7 +25,7 @@ package org.openfast.template.type.codec;
 
 import java.io.InputStream;
 
-import org.openfast.Global;
+import org.openfast.DeserializationContext;
 import org.openfast.NumericValue;
 import org.openfast.ScalarValue;
 
@@ -60,10 +60,11 @@ public final class SignedInteger extends IntegerCodec {
      * 
      * @param in
      *            The InputStream to be decoded
+     * @param deserializationContext Context that contains reusable buffers
      * @return the decoded value from the fast input stream
      */
-    public ScalarValue decode(InputStream in) {
-        final ErrorContext errorContext = Global.getErrorContext();
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
+        final ErrorContext errorContext = deserializationContext.getErrorContext();
         final long value = DecodeHelpers.decodeInt(in, errorContext);
         return errorContext.hasError ? null : NumericValue.create(value);
     }

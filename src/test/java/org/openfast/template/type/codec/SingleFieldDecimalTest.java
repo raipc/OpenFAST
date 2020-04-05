@@ -23,6 +23,7 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 package org.openfast.template.type.codec;
 
 import org.openfast.DecimalValue;
+import org.openfast.DeserializationContext;
 import org.openfast.error.FastConstants;
 import org.openfast.error.FastException;
 
@@ -59,7 +60,7 @@ public class SingleFieldDecimalTest extends OpenFastTestCase {
 
     public void testDecodeLargeDecimalReportsError() {
         try {
-            ValuesCodecs.SF_SCALED_NUMBER.decode(bitStream("00000001 11111111 10000001"));
+            ValuesCodecs.SF_SCALED_NUMBER.decode(bitStream("00000001 11111111 10000001"), new DeserializationContext());
             fail();
         } catch (FastException e) {
             assertEquals(FastConstants.R1_LARGE_DECIMAL, e.getCode());

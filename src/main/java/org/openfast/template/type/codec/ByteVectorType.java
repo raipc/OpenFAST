@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.openfast.ByteVectorValue;
+import org.openfast.DeserializationContext;
 import org.openfast.Global;
 import org.openfast.IntegerValue;
 import org.openfast.ScalarValue;
@@ -57,10 +58,11 @@ final class ByteVectorType extends TypeCodec {
      * 
      * @param in
      *            The InputStream to be decoded
+     * @param deserializationContext
      * @return Returns a new ByteVectorValue object with the data stream as an
      *         array
      */
-    public ScalarValue decode(InputStream in) {
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
         int length = (int) DecodeHelpers.decodeUInt(in);
         byte[] encoding = new byte[length];
         return decodeByteBuffer(encoding, length, in) ? new ByteVectorValue(encoding) : null;

@@ -34,7 +34,7 @@ public class MapScalar extends Field {
         if (!newDefinition) {
             return context.getCache(getKey()).lookup(index);
         }
-        ScalarValue value = ValuesCodecs.ASCII.decode(in);
+        ScalarValue value = ValuesCodecs.ASCII.decode(in, context.getDeserializationContext());
         context.store(getKey(), index, value);
         return value;
     }

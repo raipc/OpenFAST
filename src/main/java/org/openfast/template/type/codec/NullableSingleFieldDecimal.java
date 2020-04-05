@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.openfast.DecimalValue;
+import org.openfast.DeserializationContext;
 import org.openfast.Global;
 import org.openfast.IntegerValue;
 import org.openfast.NumericValue;
@@ -73,17 +74,18 @@ final class NullableSingleFieldDecimal extends TypeCodec {
      * 
      * @param in
      *            The InputStream to be decoded
+     * @param deserializationContext
      * @return Returns a decimalValue object with the data stream
      */
-    public ScalarValue decode(InputStream in) {
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
 //        Long.MIN_VALUE
 //        ValuesCodecs.NULLABLE_INTEGER.
-        ScalarValue exp = ValuesCodecs.NULLABLE_INTEGER.decode(in);
+        ScalarValue exp = ValuesCodecs.NULLABLE_INTEGER.decode(in, deserializationContext);
         if ((exp == null) || exp.isNull()) {
             return null;
         }
         int exponent = ((NumericValue) exp).toInt();
-        long mantissa = ((NumericValue) ValuesCodecs.INTEGER.decode(in)).toLong();
+        long mantissa = ((NumericValue) ValuesCodecs.INTEGER.decode(in, deserializationContext)).toLong();
         DecimalValue decimalValue = new DecimalValue(mantissa, exponent);
         return decimalValue;
     }

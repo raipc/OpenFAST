@@ -23,6 +23,7 @@ package org.openfast.submitted;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.openfast.Context;
 import org.openfast.Message;
 import org.openfast.MessageBlockReader;
 import org.openfast.MessageInputStream;
@@ -35,7 +36,7 @@ public class OpraFeedTest extends OpenFastTestCase {
     private final class OpraBlockReader implements MessageBlockReader {
         private int bytesLeft;
 
-        public boolean readBlock(InputStream in) {
+        public boolean readBlock(InputStream in, Context context) {
             try {
                 if (bytesLeft == 0) {
                     bytesLeft = ((in.read() << 24) + (in.read() << 16) + (in.read() << 8) + (in.read() << 0));
@@ -45,7 +46,7 @@ public class OpraFeedTest extends OpenFastTestCase {
                 int msgLen = (0x000000FF & in.read()); // read message length
                 bytesLeft--;
                 if (msgLen == 3) {
-                    return readBlock(in);
+                    return readBlock(in, context);
                 } else {
                     bytesLeft -= msgLen;
                 }

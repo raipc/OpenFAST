@@ -62,7 +62,7 @@ public class FastDecoder implements Coder {
      * @throws FastException if a decoding error occurs or the end of the input stream has been reached
      */
     public Message readMessage() throws FastException {
-        BitVectorValue bitVectorValue = (BitVectorValue) ValuesCodecs.BIT_VECTOR.decode(in);
+        BitVectorValue bitVectorValue = (BitVectorValue) ValuesCodecs.BIT_VECTOR.decode(in, context.getDeserializationContext());
         if (bitVectorValue == null) {
             return null;
         }

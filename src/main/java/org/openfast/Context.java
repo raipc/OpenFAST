@@ -56,6 +56,7 @@ public class Context implements OpenFastContext {
     private final Map<QName, Cache> caches = new HashMap<>();
     private final OpenFastContext parentContext;
     private FastMessageLogger logger = null;
+    private final DeserializationContext deserializationContext = new DeserializationContext();
 
     public Context() {
         this(new NullOpenFastContext());
@@ -173,5 +174,9 @@ public class Context implements OpenFastContext {
 
     public void setLogger(FastMessageLogger logger) {
         this.logger = logger;
+    }
+
+    public DeserializationContext getDeserializationContext() {
+        return deserializationContext;
     }
 }

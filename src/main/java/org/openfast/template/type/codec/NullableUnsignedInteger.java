@@ -25,6 +25,7 @@ package org.openfast.template.type.codec;
 
 import java.io.InputStream;
 
+import org.openfast.DeserializationContext;
 import org.openfast.NumericValue;
 import org.openfast.ScalarValue;
 
@@ -52,9 +53,10 @@ public final class NullableUnsignedInteger extends IntegerCodec {
      * 
      * @param in
      *            The InputStream to be decoded
+     * @param deserializationContext
      * @return Returns a NumericValue object
      */
-    public ScalarValue decode(InputStream in) {
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
         long value = DecodeHelpers.decodeUInt(in);
         if (value == 0) {
             return null;

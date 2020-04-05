@@ -2,6 +2,8 @@ package org.openfast.template.type.codec;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
+
+import org.openfast.DeserializationContext;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
 import org.openfast.test.OpenFastTestCase;
@@ -22,7 +24,7 @@ public class NullableUnicodeStringTest extends OpenFastTestCase {
         Arrays.fill(b, (byte)'1');
         String expected = new String(b);
         byte[] bytes = codec.encode(new StringValue(expected));
-        final ScalarValue value = codec.decode(new ByteArrayInputStream(bytes));
+        final ScalarValue value = codec.decode(new ByteArrayInputStream(bytes), new DeserializationContext());
         String actual = value.toString();
         assertEquals(expected, actual);
     }

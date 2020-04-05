@@ -24,7 +24,7 @@ import java.io.InputStream;
 
 public interface MessageBlockReader {
     MessageBlockReader NULL = new MessageBlockReader() {
-        public boolean readBlock(InputStream in) {
+        public boolean readBlock(InputStream in, Context context) {
             return true;
         }
 
@@ -36,7 +36,7 @@ public interface MessageBlockReader {
 		}
     };
 
-    boolean readBlock(InputStream in);
+    boolean readBlock(InputStream in, Context context);
 
     void messageRead(InputStream in, Message message);
 }

@@ -23,6 +23,7 @@ package org.openfast.template.type.codec;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import org.openfast.DeserializationContext;
 import org.openfast.ScalarValue;
 
 public abstract class TypeCodec implements Serializable {
@@ -32,7 +33,7 @@ public abstract class TypeCodec implements Serializable {
 
     public abstract byte[] encodeValue(ScalarValue value);
 
-    public abstract ScalarValue decode(InputStream in);
+    public abstract ScalarValue decode(InputStream in, DeserializationContext deserializationContext);
 
     /**
      * Template Method to encode the passed object, the actual encoding is done

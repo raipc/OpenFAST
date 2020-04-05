@@ -25,10 +25,9 @@ package org.openfast.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
+
 import junit.framework.TestCase;
+import org.openfast.Context;
 import org.openfast.Message;
 import org.openfast.ScalarValue;
 import org.openfast.template.Field;
@@ -65,7 +64,7 @@ public class CmeTcpReplayMessageBlockReaderWriterTest extends TestCase {
 
     public void testRead() {
         CmeTcpReplayMessageBlockReader reader = new CmeTcpReplayMessageBlockReader();
-        assertTrue(reader.readBlock(new ByteArrayInputStream(encodedMessageWithHeader)));
+        assertTrue(reader.readBlock(new ByteArrayInputStream(encodedMessageWithHeader), new Context()));
 		assertEquals(17, reader.getLastLengthIndicator());
 		assertEquals(1, reader.getLastSeqNum());
 		assertEquals(0, reader.getLastSubId());
@@ -81,7 +80,7 @@ public class CmeTcpReplayMessageBlockReaderWriterTest extends TestCase {
         writer.writeBlockLength(out, msg, encodedMessageSansHeader);
 
         CmeTcpReplayMessageBlockReader reader = new CmeTcpReplayMessageBlockReader();
-        assertTrue(reader.readBlock(new ByteArrayInputStream(out.toByteArray())));
+        assertTrue(reader.readBlock(new ByteArrayInputStream(out.toByteArray()), new Context()));
         assertEquals(encodedMessageSansHeader.length + CmeConstants.PREAMBLE_LEN , reader.getLastLengthIndicator());
         assertEquals(msg.getLong("MsgSeqNum"), reader.getLastSeqNum());
         assertEquals(0, reader.getLastSubId());

@@ -20,6 +20,7 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast.template.type.codec;
 
+import org.openfast.DeserializationContext;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
 import org.openfast.template.TwinValue;
@@ -35,13 +36,14 @@ public class NullableStringDelta extends TypeCodec {
      * 
      * @param in
      *            The InputStream to be decoded
+     * @param deserializationContext
      * @return Returns a new TwinValue object with the data as its parameters
      */
-    public ScalarValue decode(InputStream in) {
-        ScalarValue subtractionLength = ValuesCodecs.NULLABLE_INTEGER.decode(in);
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
+        ScalarValue subtractionLength = ValuesCodecs.NULLABLE_INTEGER.decode(in, deserializationContext);
         if (subtractionLength == null)
             return null;
-        ScalarValue difference = ValuesCodecs.ASCII.decode(in);
+        ScalarValue difference = ValuesCodecs.ASCII.decode(in, deserializationContext);
         return new TwinValue(subtractionLength, difference);
     }
 

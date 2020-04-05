@@ -230,7 +230,7 @@ public class Scalar extends Field {
                 if (!operatorCodec.shouldDecodeType()) {
                     return operatorCodec.decodeValue(null, null, this);
                 }
-                ScalarValue decodedValue = typeCodec.decode(in);
+                ScalarValue decodedValue = typeCodec.decode(in, context.getDeserializationContext());
                 value = decodeValue(decodedValue, previousValue);
                 if (context.isTraceEnabled())
                     context.getDecodeTrace().field(this, value, decodedValue, ((RecordingInputStream) in).getBuffer(), pmapIndex);

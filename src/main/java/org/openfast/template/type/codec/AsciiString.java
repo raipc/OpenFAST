@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import org.openfast.ByteUtil;
+import org.openfast.DeserializationContext;
 import org.openfast.Global;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
@@ -67,11 +68,12 @@ public final class AsciiString extends TypeCodec {
      * 
      * @param in
      *            The InputStream to be decoded
+     * @param deserializationContext Context that contains reusable buffers
      * @return Returns a new StringValue object with the data stream as a String
      */
-    public ScalarValue decode(InputStream in) {
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
         int byt;
-        PatchableByteArrayOutputStream buffer = Global.getBuffer();
+        PatchableByteArrayOutputStream buffer = deserializationContext.getBuffer();
         try {
             do {
                 byt = in.read();

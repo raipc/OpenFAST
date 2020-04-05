@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
+import org.openfast.Context;
 import org.openfast.Message;
 import org.openfast.MessageBlockReader;
 import org.openfast.examples.Assert;
@@ -55,7 +56,7 @@ public class Main extends OpenFastExample {
         if (cl.hasOption(BLOCK)) {
             consumer.setBlockReader(new MessageBlockReader() {
                 byte[] buffer = new byte[4];
-                public boolean readBlock(InputStream in) {
+                public boolean readBlock(InputStream in, Context context) {
                     try {
                         int numRead = in.read(buffer);
                         if (numRead < buffer.length) {

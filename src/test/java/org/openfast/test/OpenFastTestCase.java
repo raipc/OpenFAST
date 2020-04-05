@@ -34,6 +34,7 @@ import org.openfast.ByteUtil;
 import org.openfast.ByteVectorValue;
 import org.openfast.Context;
 import org.openfast.DecimalValue;
+import org.openfast.DeserializationContext;
 import org.openfast.IntegerValue;
 import org.openfast.QName;
 import org.openfast.ScalarValue;
@@ -85,7 +86,7 @@ public abstract class OpenFastTestCase extends TestCase {
 
     protected static void assertEncodeDecode(ScalarValue value, String bitString, TypeCodec type) {
         assertEquals(bitString, type.encode(value == null ? ScalarValue.NULL : value));
-        assertEquals(value, type.decode(ByteUtil.createByteStream(bitString)));
+        assertEquals(value, type.decode(ByteUtil.createByteStream(bitString), new DeserializationContext()));
     }
 
     protected static InputStream bitStream(String bitString) {

@@ -253,7 +253,7 @@ public class Group extends Field {
      */
     protected FieldValue[] decodeFieldValues(InputStream in, Group template, Context context) {
         if (usesPresenceMap()) {
-            BitVector pmap = ((BitVectorValue) ValuesCodecs.BIT_VECTOR.decode(in)).value;
+            BitVector pmap = ((BitVectorValue) ValuesCodecs.BIT_VECTOR.decode(in, context.getDeserializationContext())).value;
             if (context.isTraceEnabled())
                 context.getDecodeTrace().pmap(pmap.getBytes());
             if (pmap.isOverlong())

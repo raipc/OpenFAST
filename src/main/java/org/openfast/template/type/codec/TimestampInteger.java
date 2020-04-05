@@ -23,6 +23,7 @@ package org.openfast.template.type.codec;
 import java.io.InputStream;
 import java.util.Date;
 import org.openfast.DateValue;
+import org.openfast.DeserializationContext;
 import org.openfast.IntegerValue;
 import org.openfast.ScalarValue;
 import org.openfast.util.Util;
@@ -30,8 +31,8 @@ import org.openfast.util.Util;
 public class TimestampInteger extends TypeCodec {
     private static final long serialVersionUID = 1L;
 
-    public ScalarValue decode(InputStream in) {
-        int intValue = ((IntegerValue) ValuesCodecs.UINT.decode(in)).value;
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
+        int intValue = ((IntegerValue) ValuesCodecs.UINT.decode(in, deserializationContext)).value;
         return new DateValue(Util.toTimestamp(intValue));
     }
 

@@ -20,6 +20,7 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
  */
 package org.openfast.template.type.codec;
 
+import org.openfast.DeserializationContext;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
 import org.openfast.template.TwinValue;
@@ -35,11 +36,12 @@ public class StringDelta extends TypeCodec {
      * 
      * @param in
      *            The InputStream to be decoded
+     * @param deserializationContext
      * @return Returns a TwinValue object with the data stream
      */
-    public ScalarValue decode(InputStream in) {
-        ScalarValue subtractionLength = ValuesCodecs.INTEGER.decode(in);
-        ScalarValue difference = ValuesCodecs.ASCII.decode(in);
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
+        ScalarValue subtractionLength = ValuesCodecs.INTEGER.decode(in, deserializationContext);
+        ScalarValue difference = ValuesCodecs.ASCII.decode(in, deserializationContext);
         return new TwinValue(subtractionLength, difference);
     }
 

@@ -64,7 +64,7 @@ public class MessageInputStream implements MessageStream {
     public Message readMessage() {
         if (context.isTraceEnabled())
             context.startTrace();
-        boolean keepReading = blockReader.readBlock(in);
+        boolean keepReading = blockReader.readBlock(in, context);
         if (!keepReading)
             return null;
         Message message = decoder.readMessage();

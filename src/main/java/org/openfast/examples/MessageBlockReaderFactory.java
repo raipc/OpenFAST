@@ -2,6 +2,8 @@ package org.openfast.examples;
 
 import java.io.InputStream;
 import java.io.IOException;
+
+import org.openfast.Context;
 import org.openfast.Message;
 import org.openfast.MessageBlockReader;
 import org.openfast.examples.OpenFastExample.Variant;
@@ -39,7 +41,7 @@ public class MessageBlockReaderFactory {
 
 		return new MessageBlockReader() {
 			public void messageRead(InputStream in, Message message) { }
-			public boolean readBlock(InputStream in) {
+			public boolean readBlock(InputStream in, Context context) {
 				try {
 					in.skip(offset);
 					return true;

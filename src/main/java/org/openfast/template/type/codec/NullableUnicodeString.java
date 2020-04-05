@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import org.openfast.ByteVectorValue;
+import org.openfast.DeserializationContext;
 import org.openfast.Global;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
@@ -56,15 +57,16 @@ final class NullableUnicodeString extends NotStopBitEncodedTypeCodec {
      * 
      * @param in
      *            The InputStream to be decoded
+     * @param deserializationContext
      * @return Returns a new StringValue object with the data stream as its
      *         parameters
      */
-    public ScalarValue decode(InputStream in) {
+    public ScalarValue decode(InputStream in, DeserializationContext deserializationContext) {
         final int length = (int) DecodeHelpers.decodeUInt(in) - 1;
         if (length < 0) {
             return null;
         }
-        final PatchableByteArrayOutputStream buffer = Global.getBuffer();
+        final PatchableByteArrayOutputStream buffer = deserializationContext.getBuffer();
         buffer.ensureCapacity(length);
         final byte[] bytes = buffer.getRawArray();
         if (!ByteVectorType.decodeByteBuffer(bytes, length, in)) {
