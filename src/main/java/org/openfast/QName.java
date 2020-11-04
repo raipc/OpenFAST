@@ -28,8 +28,8 @@ public class QName implements Serializable {
     public static final QName NULL = new QName("", "");
 
     private final String namespace;
-
     private final String name;
+    private final int hashCode;
 
     public QName(String name) {
         this(name, "");
@@ -37,9 +37,10 @@ public class QName implements Serializable {
 
     public QName(String name, String namespace) {
         if (name == null)
-            throw new NullPointerException();
+            throw new NullPointerException("name must not be null");
         this.name = name;
         this.namespace = namespace == null ? "" : namespace;
+        this.hashCode = calculateHashCode();
     }
 
     public String getNamespace() {
@@ -50,22 +51,27 @@ public class QName implements Serializable {
         return name;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
-        if (obj == null || obj.getClass() != this.getClass())
+        if (obj == null || obj.getClass() != this.getClass() || obj.hashCode() != hashCode())
             return false;
         QName other = (QName) obj;
         return other.namespace.equals(namespace) && other.name.equals(name);
     }
 
-    public int hashCode() {
+    private int calculateHashCode() {
         return name.hashCode() + 31 * namespace.hashCode();
     }
 
+    @Override
+    public int hashCode() {
+        return hashCode;
+    }
+
+    @Override
     public String toString() {
-        if (namespace.equals(""))
-            return name;
-        return name + "[" + namespace + "]";
+        return namespace.isEmpty() ? name : name + "[" + namespace + "]";
     }
 }
