@@ -22,6 +22,7 @@ package org.openfast.template.type;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.openfast.ScalarValue;
@@ -107,11 +108,7 @@ public abstract class Type implements Serializable {
         private static final long serialVersionUID = 1L;
 
         public ScalarValue getValue(byte[] bytes) {
-            try {
-                return new StringValue(new String(bytes, "UTF8"));
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
+            return new StringValue(new String(bytes, StandardCharsets.UTF_8));
         }
         public ScalarValue getValue(byte[] bytes, int offset, int length) {
             try {
