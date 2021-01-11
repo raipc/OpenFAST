@@ -70,7 +70,7 @@ public class StringDelta extends TypeCodec {
      * @return Returns a new StringValue object with a default value
      */
     public ScalarValue getDefaultValue() {
-        return new StringValue("");
+        return StringValue.EMPTY;
     }
 
     /**

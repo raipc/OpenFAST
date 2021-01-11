@@ -68,6 +68,9 @@ final class UnicodeString extends NotStopBitEncodedTypeCodec {
         if (!ByteVectorType.decodeByteBuffer(bytes, length, in)) {
             return null;
         }
+        if (length == 1) {
+            return StringValue.fromCharCode(bytes[0]);
+        }
         return new StringValue(new String(bytes, 0, length, StandardCharsets.UTF_8));
     }
 
@@ -83,6 +86,6 @@ final class UnicodeString extends NotStopBitEncodedTypeCodec {
      * @return Returns a new StringValue with a default value
      */
     public ScalarValue getDefaultValue() {
-        return new StringValue("");
+        return StringValue.EMPTY;
     }
 }

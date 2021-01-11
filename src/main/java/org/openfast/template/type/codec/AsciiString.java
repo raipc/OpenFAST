@@ -93,9 +93,12 @@ public final class AsciiString extends TypeCodec {
         if (bytes[0] == 0) {
             if (!ByteUtil.isEmpty(bytes, len))
                 Global.handleError(FastConstants.R9_STRING_OVERLONG, null);
-            if (len > 1 && bytes[1] == 0)
-                return new StringValue("\u0000");
-            return new StringValue("");
+            if (len > 1 && bytes[1] == 0) {
+                return StringValue.fromCharCode(0);
+            }
+            return StringValue.EMPTY;
+        } else if (len == 1) {
+            return StringValue.fromCharCode(bytes[0]);
         }
         return new StringValue(new String(bytes, 0, len, StandardCharsets.US_ASCII));
     }

@@ -21,11 +21,24 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 package org.openfast;
 
 import java.math.BigDecimal;
+import java.util.stream.IntStream;
+
 import org.openfast.error.FastConstants;
 
 public class StringValue extends ScalarValue {
     private static final long serialVersionUID = 1L;
+    private static final StringValue[] SINGLE_CHARACTER_STRINGS = IntStream.range(0, 128)
+            .mapToObj(charCode -> new StringValue(new String(new char[]{(char)charCode})))
+            .toArray(StringValue[]::new);
+    public static final StringValue EMPTY = new StringValue("");
     public final String value;
+
+    public static StringValue fromCharCode(int charCode) {
+        if (charCode >= 0 && charCode < 128) {
+            return SINGLE_CHARACTER_STRINGS[charCode];
+        }
+        return new StringValue(new String(new char[]{(char)charCode}));
+    }
 
     public StringValue(String value) {
         if (value == null)

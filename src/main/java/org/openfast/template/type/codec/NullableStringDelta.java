@@ -71,7 +71,7 @@ public class NullableStringDelta extends TypeCodec {
      * @return Returns a new StringValue object with a defualt value
      */
     public ScalarValue getDefaultValue() {
-        return new StringValue("");
+        return StringValue.EMPTY;
     }
 
     /**
