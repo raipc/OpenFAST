@@ -74,7 +74,7 @@ public class Scalar extends Field {
         this.defaultValue = (defaultValue == null) ? ScalarValue.UNDEFINED : defaultValue;
         this.type = type;
         this.typeCodec = type.getCodec(operator, optional);
-        this.initialValue = ((defaultValue == null) || defaultValue.isUndefined()) ? this.type.getDefaultValue() : defaultValue;
+        this.initialValue = (defaultValue == null || defaultValue.isUndefined()) ? this.type.getDefaultValue() : defaultValue;
         operator.validate(this);
     }
     /**

@@ -60,7 +60,7 @@ public class StringType extends SimpleType {
      * @return Returns a new StringValue object with empty string as the value
      */
     public ScalarValue getDefaultValue() {
-        return new StringValue("");
+        return StringValue.EMPTY;
     }
 
     /**

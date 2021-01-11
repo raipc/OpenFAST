@@ -28,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 
 import org.openfast.ByteVectorValue;
 import org.openfast.DeserializationContext;
-import org.openfast.Global;
 import org.openfast.ScalarValue;
 import org.openfast.StringValue;
 import org.openfast.util.PatchableByteArrayOutputStream;
@@ -55,9 +54,8 @@ final class NullableUnicodeString extends NotStopBitEncodedTypeCodec {
     /**
      * Reads in a stream of data and stores it to a StringValue object
      * 
-     * @param in
-     *            The InputStream to be decoded
-     * @param deserializationContext
+     * @param in The InputStream to be decoded
+     * @param deserializationContext context with helper buffers
      * @return Returns a new StringValue object with the data stream as its
      *         parameters
      */
@@ -71,6 +69,9 @@ final class NullableUnicodeString extends NotStopBitEncodedTypeCodec {
         final byte[] bytes = buffer.getRawArray();
         if (!ByteVectorType.decodeByteBuffer(bytes, length, in)) {
             return null;
+        }
+        if (length == 1) {
+            return StringValue.fromCharCode(0);
         }
         return new StringValue(new String(bytes, 0, length, StandardCharsets.UTF_8));
 
@@ -88,7 +89,7 @@ final class NullableUnicodeString extends NotStopBitEncodedTypeCodec {
      * @return Returns a new StringValue object with a default value
      */
     public ScalarValue getDefaultValue() {
-        return new StringValue("");
+        return StringValue.EMPTY;
     }
 
     public boolean equals(Object obj) {

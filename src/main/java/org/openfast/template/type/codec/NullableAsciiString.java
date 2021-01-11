@@ -95,10 +95,13 @@ final class NullableAsciiString extends TypeCodec {
             if ((len == 1)) {
                 return null;
             } else if (len == 2 && bytes[1] == 0) {
-                return new StringValue("");
+                return StringValue.EMPTY;
             } else if (len == 3 && bytes[2] == 0) {
-                return new StringValue("\u0000");
+                return StringValue.fromCharCode(0);
             }
+        }
+        if (len == 1) {
+            return StringValue.fromCharCode(bytes[0]);
         }
         return new StringValue(new String(bytes, 0, len, StandardCharsets.US_ASCII));
     }
@@ -120,7 +123,7 @@ final class NullableAsciiString extends TypeCodec {
      * @return Returns an empty StringValue object
      */
     public ScalarValue getDefaultValue() {
-        return new StringValue("");
+        return StringValue.EMPTY;
     }
 
     /**
