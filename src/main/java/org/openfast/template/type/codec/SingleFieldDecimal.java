@@ -78,7 +78,7 @@ final class SingleFieldDecimal extends TypeCodec {
         if (errorContext.hasError) {
             return null;
         }
-        if (Math.abs(exponent) > 63) {
+        if (exponent > 63 || exponent < -63) {
             Global.handleError(FastConstants.R1_LARGE_DECIMAL, "Encountered exponent of size " + exponent);
         }
         final long mantissa = DecodeHelpers.decodeInt(in, errorContext);

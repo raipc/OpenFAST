@@ -20,6 +20,8 @@ Contributor(s): Jacob Northey <jacob@lasalletech.com>
 */
 package org.openfast;
 
+import java.util.stream.IntStream;
+
 import org.openfast.template.LongValue;
 import org.openfast.util.Util;
 
@@ -34,6 +36,20 @@ public abstract class NumericValue extends ScalarValue {
     public abstract int toInt();
 
     public static NumericValue create(long value) {
-        return Util.isBiggerThanInt(value) ? new LongValue(value) : new IntegerValue((int)value);
+        if (value <= CacheHolder.CACHE_SIZE && value >= 0) {
+            return CacheHolder.FIRST_INT_VALUES[(int)value];
+        }
+        return Util.isBiggerThanInt(value) ? new LongValue(value) : new IntegerValue((int) value);
+    }
+
+    private static class CacheHolder {
+        private static final int CACHE_SIZE = resolveCacheSize();
+        private static final IntegerValue[] FIRST_INT_VALUES = IntStream.rangeClosed(0, CACHE_SIZE)
+                .mapToObj(IntegerValue::new)
+                .toArray(IntegerValue[]::new);
+
+        private static int resolveCacheSize() {
+            return Integer.parseInt(System.getProperty("openfast.integer.cache.size", "10000"));
+        }
     }
 }

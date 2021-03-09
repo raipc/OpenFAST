@@ -28,7 +28,7 @@ import org.openfast.error.FastConstants;
 public class StringValue extends ScalarValue {
     private static final long serialVersionUID = 1L;
     private static final StringValue[] SINGLE_CHARACTER_STRINGS = IntStream.range(0, 128)
-            .mapToObj(charCode -> new StringValue(new String(new char[]{(char)charCode})))
+            .mapToObj(charCode -> new StringValue(String.valueOf((char)charCode)))
             .toArray(StringValue[]::new);
     public static final StringValue EMPTY = new StringValue("");
     public final String value;
@@ -37,7 +37,7 @@ public class StringValue extends ScalarValue {
         if (charCode >= 0 && charCode < 128) {
             return SINGLE_CHARACTER_STRINGS[charCode];
         }
-        return new StringValue(new String(new char[]{(char)charCode}));
+        return new StringValue(String.valueOf((char)charCode));
     }
 
     public StringValue(String value) {
