@@ -27,6 +27,7 @@ import org.openfast.error.FastConstants;
 
 public class DecimalValue extends NumericValue {
     private static final long serialVersionUID = 1L;
+    private static final ThreadLocal<StringBuilder> sb = ThreadLocal.withInitial(StringBuilder::new);
 
     public final int exponent;
     public final long mantissa;
@@ -166,7 +167,11 @@ public class DecimalValue extends NumericValue {
     @Override
     public String toString() {
 //        return "Not Calculated";
-        return toBigDecimal().toPlainString();
+//        return toBigDecimal().toPlainString();
+        final StringBuilder s = sb.get();
+        s.setLength(0);
+        appendValue(s, null);
+        return s.toString();
     }
 
     @Override
